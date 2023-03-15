@@ -1,0 +1,58 @@
+# Caches
+__pycache__/
+*.py[cod]
+*.pyo
+node_modules/
+venv/
+.venv/
+.cache/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Logs e dados
+logs/
+*.log
+
+# ML models
+*.pkl
+*.joblib
+
+# Evidencias de IA
+Task_Final/
+IMPORTANT.md
+*.claude.md
+*_AI_*.md
+
+# Secrets
+.env
+*.key
+*.pem
+.git-credentials
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Projeto de referencia (nao faz parte do PDForge)
+QR-Code-Void-Generator/
+
+# Planejamento interno
+sprints/
+
+# Config de versao local
+=*.*.*/
+
+# Cobertura de testes
+.coverage
+htmlcov/
+coverage.xml
