@@ -1,0 +1,28 @@
+# PDFForge — dependências com versões pinadas
+# Instalar: pip install -r requirements.txt
+# Para suporte CUDA: pip install torch --index-url https://download.pytorch.org/whl/cu121
+
+# Core PDF
+pymupdf==1.27.1
+
+# GUI
+PyQt6>=6.6.0
+
+# OCR
+easyocr==1.7.2
+
+# GPU / CUDA (instalar separadamente com index CUDA se necessário)
+torch>=2.1.0
+
+# CLI
+click==8.1.7
+
+# Utilitários
+pillow==10.4.0
+numpy>=1.26.0
+
+# Monitoramento GPU (opcional, mas recomendado)
+gputil==1.4.0
+
+# Exportação DOCX
+pdf2docx>=0.5.6
