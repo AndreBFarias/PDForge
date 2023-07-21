@@ -15,6 +15,7 @@ class DragDropPDFList(QListWidget):
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
+        self.setObjectName("dropZone")
         self.setDragDropMode(QAbstractItemView.DragDropMode.InternalMove)
         self.setAcceptDrops(True)
         self.setDropIndicatorShown(True)
