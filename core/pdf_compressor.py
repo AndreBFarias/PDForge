@@ -12,7 +12,7 @@ try:
 except ImportError:
     CV2_AVAILABLE = False
 
-logger = logging.getLogger("pdfforge")
+logger = logging.getLogger("pdfforge.compressor")
 
 COMPRESS_PROFILES: dict[str, dict] = {
     "leve": {"dpi": 150, "jpeg_quality": 85, "deflate_images": False},

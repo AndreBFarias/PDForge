@@ -75,3 +75,6 @@ def validate_pdf_path(path: Path) -> None:
         raise ValueError(f"Extensão inválida (esperado .pdf): {path.suffix}")
     if path.stat().st_size == 0:
         raise ValueError(f"Arquivo vazio: {path}")
+
+
+# "A ordem é o prazer da razão." — Henri Frédéric Amiel

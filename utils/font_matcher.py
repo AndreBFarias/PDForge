@@ -87,3 +87,6 @@ class FontMatcher:
         info_a = self.match(name_a)
         info_b = self.match(name_b)
         return info_a.family == info_b.family
+
+
+# "A tipografia é a arte de vestir a linguagem." — Beatrice Warde

@@ -127,3 +127,6 @@ class OCREngine:
             )
         doc.save(str(output_path), garbage=4, deflate=True)
         logger.info("Camada OCR salva em: %s", output_path.name)
+
+
+# "A máquina que lê é o espelho da máquina que escreve." — Alan Turing

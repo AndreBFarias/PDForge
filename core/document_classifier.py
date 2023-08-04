@@ -6,7 +6,7 @@ import fitz
 
 from config.settings import Settings
 
-logger = logging.getLogger("pdfforge")
+logger = logging.getLogger("pdfforge.classifier")
 
 HEURISTIC_RULES: dict[str, list[str]] = {
     "contrato": ["cláusula", "contratante", "contratado", "objeto do contrato", "vigência"],
