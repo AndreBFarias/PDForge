@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=PDForge
+Comment=Editor de PDF com GUI e ML para Linux
+Exec=pdfforge %f
+Icon=pdfforge
+Type=Application
+Categories=Office;Graphics;
+MimeType=application/pdf;
+StartupNotify=true
+Terminal=false

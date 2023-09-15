@@ -1,0 +1,12 @@
+Package: pdfforge
+Version: 1.0.0
+Section: office
+Priority: optional
+Architecture: all
+Depends: python3 (>= 3.10), python3-venv, python3-pip, libgl1-mesa-glx, libglib2.0-0, libxcb-xinerama0, libxkbcommon-x11-0, libdbus-1-3
+Maintainer: Andre Farias <andre.dsbf@gmail.com>
+Description: Editor e manipulador de PDF para Linux
+ PDForge oferece mesclagem, divisao, compressao, OCR,
+ classificacao de documentos e edicao de texto em PDFs
+ com interface grafica PyQt6 e tema Dracula.
+Homepage: https://github.com/AndreBFarias/PDForge

@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+VENV_DIR="/opt/pdfforge/venv"
+
+if [ -d "$VENV_DIR" ]; then
+    rm -rf "$VENV_DIR"
+    echo "PDForge: ambiente virtual removido"
+fi
