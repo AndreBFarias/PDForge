@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
     QComboBox,
     QHBoxLayout,
@@ -101,6 +102,7 @@ class PageBatch(QWidget):
         self._table.horizontalHeader().setStretchLastSection(True)
         self._table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self._table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self._table.verticalHeader().setDefaultSectionSize(36)
         self._table.verticalHeader().setVisible(False)
         self._table.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         layout.addWidget(self._table)
@@ -154,12 +156,16 @@ class PageBatch(QWidget):
         self._lbl_status.setText(report.summary())
 
         self._table.setRowCount(0)
+        first_success_path = None
         for file_result in report.results:
             row = self._table.rowCount()
             self._table.insertRow(row)
 
             status_text = "OK" if file_result.success else "ERRO"
             status_color = DraculaTheme.GREEN if file_result.success else DraculaTheme.RED
+
+            if file_result.success and first_success_path is None:
+                first_success_path = file_result.path
 
             items = [
                 QTableWidgetItem(file_result.path.name),
@@ -170,12 +176,13 @@ class PageBatch(QWidget):
             for col, item in enumerate(items):
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 if col == 1:
-                    item.setForeground(
-                        __import__("PyQt6.QtGui", fromlist=["QColor"]).QColor(status_color)
-                    )
+                    item.setForeground(QColor(status_color))
                 self._table.setItem(row, col, item)
 
         self._table.resizeColumnsToContents()
+
+        if first_success_path is not None:
+            self.pdf_changed.emit(first_success_path)
 
     def _on_error(self, msg: str) -> None:
         self._btn_run.setEnabled(True)

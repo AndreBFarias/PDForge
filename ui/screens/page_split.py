@@ -58,6 +58,8 @@ class PageSplit(QWidget):
 
         # Aba Por Range
         tab_range = QWidget()
+        tab_range.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+        tab_range.setAutoFillBackground(True)
         vbox_range = QVBoxLayout(tab_range)
         vbox_range.setContentsMargins(12, 12, 12, 12)
         lbl_range = QLabel('Páginas base 0, separadas por vírgula. Ex: "0-2, 3-4, 5-9"')
@@ -71,6 +73,8 @@ class PageSplit(QWidget):
 
         # Aba Por Tamanho
         tab_size = QWidget()
+        tab_size.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+        tab_size.setAutoFillBackground(True)
         vbox_size = QVBoxLayout(tab_size)
         vbox_size.setContentsMargins(12, 12, 12, 12)
         lbl_size = QLabel("Tamanho máximo por parte (MB):")
@@ -86,6 +90,8 @@ class PageSplit(QWidget):
 
         # Aba Por Marcadores
         tab_bk = QWidget()
+        tab_bk.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+        tab_bk.setAutoFillBackground(True)
         vbox_bk = QVBoxLayout(tab_bk)
         vbox_bk.setContentsMargins(12, 12, 12, 12)
         lbl_bk = QLabel("Divide o PDF nos marcadores (TOC) de nível 1.")

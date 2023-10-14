@@ -69,7 +69,7 @@ class PageMerge(QWidget):
         lbl_out.setStyleSheet(f"color: {DraculaTheme.COMMENT}; font-weight: bold;")
         layout.addWidget(lbl_out)
 
-        self._btn_out = FilePathButton("Selecionar arquivo de saída (.pdf)  ", mode="pdf")
+        self._btn_out = FilePathButton("Selecionar arquivo de saída (.pdf)  ", mode="save")
         layout.addWidget(self._btn_out)
 
         self._progress = QProgressBar()
