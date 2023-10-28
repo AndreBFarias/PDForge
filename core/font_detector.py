@@ -82,10 +82,10 @@ class FontDetector:
         logger.info("Fontes detectadas: %d tipos únicos", len(result))
         return result
 
-
-# "A tipografia é a voz da escrita." — Robert Bringhurst
-
     def get_dominant_font(self, doc: fitz.Document) -> FontUsage | None:
         """Retorna a fonte mais usada no documento."""
         usages = self.extract(doc)
         return usages[0] if usages else None
+
+
+# "A tipografia é a voz da escrita." — Robert Bringhurst

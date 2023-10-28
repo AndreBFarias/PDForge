@@ -26,8 +26,12 @@ from ui.screens.page_compress import PageCompress
 from ui.screens.page_editor import PageEditor
 from ui.screens.page_merge import PageMerge
 from ui.screens.page_ocr import PageOCR
+from ui.screens.page_images import PageImages
+from ui.screens.page_organizer import PageOrganizer
+from ui.screens.page_security import PageSecurity
 from ui.screens.page_signature import PageSignature
 from ui.screens.page_split import PageSplit
+from ui.screens.page_watermark import PageWatermark
 from ui.styles import DraculaTheme
 from ui.widgets.pdf_page_viewer import PDFPageViewer
 
@@ -54,6 +58,10 @@ _SIDEBAR_ITEMS = [
     "Mesclar",
     "Dividir",
     "Comprimir",
+    "Segurança",
+    "Imagens",
+    "Marca d'Água",
+    "Organizar",
     "Assinaturas",
     "Classificar",
     "Lote",
@@ -168,25 +176,39 @@ class MainWindow(QMainWindow):
         self._stack = QStackedWidget()
         vbox.addWidget(self._stack)
 
-        self._page_editor = PageEditor(use_gpu=self._use_gpu)       # índice 0
-        self._page_analyzer = PageAnalyzer(use_gpu=self._use_gpu)   # índice 1
-        self._page_ocr = PageOCR(use_gpu=self._use_gpu)             # índice 2
-        self._page_merge = PageMerge(use_gpu=self._use_gpu)         # índice 3
-        self._page_split = PageSplit(use_gpu=self._use_gpu)         # índice 4
-        self._page_compress = PageCompress(use_gpu=self._use_gpu)   # índice 5
-        self._page_signature = PageSignature(use_gpu=self._use_gpu) # índice 6
-        self._page_classifier = PageClassifier(use_gpu=self._use_gpu)  # índice 7
-        self._page_batch = PageBatch(use_gpu=self._use_gpu)              # índice 8
+        self._page_editor = PageEditor(use_gpu=self._use_gpu)
+        self._page_analyzer = PageAnalyzer(use_gpu=self._use_gpu)
+        self._page_ocr = PageOCR(use_gpu=self._use_gpu)
+        self._page_merge = PageMerge(use_gpu=self._use_gpu)
+        self._page_split = PageSplit(use_gpu=self._use_gpu)
+        self._page_compress = PageCompress(use_gpu=self._use_gpu)
+        self._page_security = PageSecurity(use_gpu=self._use_gpu)
+        self._page_images = PageImages(use_gpu=self._use_gpu)
+        self._page_watermark = PageWatermark(use_gpu=self._use_gpu)
+        self._page_organizer = PageOrganizer(use_gpu=self._use_gpu)
+        self._page_signature = PageSignature(use_gpu=self._use_gpu)
+        self._page_classifier = PageClassifier(use_gpu=self._use_gpu)
+        self._page_batch = PageBatch(use_gpu=self._use_gpu)
 
-        for page in (
+        self._all_pages = (
             self._page_editor, self._page_analyzer, self._page_ocr,
             self._page_merge, self._page_split, self._page_compress,
-            self._page_signature, self._page_classifier, self._page_batch,
-        ):
-            page.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+            self._page_security, self._page_images,
+            self._page_watermark, self._page_organizer,
+            self._page_signature, self._page_classifier,
+            self._page_batch,
+        )
+
+        for page in self._all_pages:
+            page.setAttribute(
+                Qt.WidgetAttribute.WA_StyledBackground, True,
+            )
             page.setAutoFillBackground(True)
             pal_page = page.palette()
-            pal_page.setColor(QPalette.ColorRole.Window, QColor(DraculaTheme.BACKGROUND))
+            pal_page.setColor(
+                QPalette.ColorRole.Window,
+                QColor(DraculaTheme.BACKGROUND),
+            )
             page.setPalette(pal_page)
             self._stack.addWidget(page)
 
@@ -289,11 +311,7 @@ class MainWindow(QMainWindow):
         self._refresh_all_pages()
 
     def _refresh_all_pages(self) -> None:
-        for page in (
-            self._page_editor, self._page_analyzer, self._page_ocr,
-            self._page_merge, self._page_split, self._page_compress,
-            self._page_signature, self._page_classifier, self._page_batch,
-        ):
+        for page in self._all_pages:
             page.refresh_state(self._current_pdf, self._output_dir)
 
     def _load_pdf(self, path: Path) -> None:

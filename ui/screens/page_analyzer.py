@@ -19,7 +19,7 @@ from PyQt6.QtWidgets import (
 
 from core.font_detector import FontDetector
 from core.metadata import PDFMetadata
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from utils.file_utils import ensure_output_path
 from ui.styles import DraculaTheme
 
@@ -234,6 +234,8 @@ class PageAnalyzer(QWidget):
             PDFMetadata().clear(doc, output_path)
             doc.close()
             self._toast.show_message(f"Metadados removidos → {output_path.name}")
+            if output_path.exists():
+                ExportDialog(output_path, self).exec()
         except Exception as exc:
             logger.error("Falha ao limpar metadados: %s", exc, exc_info=True)
             self._toast.show_message(f"Erro: {exc}")

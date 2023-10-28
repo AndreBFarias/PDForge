@@ -1,9 +1,12 @@
 import logging
 from pathlib import Path
 
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal
+from PyQt6.QtCore import Qt, QTimer, QUrl, pyqtSignal
+from PyQt6.QtGui import QDesktopServices
 from PyQt6.QtWidgets import (
+    QDialog,
     QFileDialog,
+    QHBoxLayout,
     QLabel,
     QPushButton,
     QVBoxLayout,
@@ -139,6 +142,79 @@ class SectionHeader(QLabel):
             "font-size: 26px; font-weight: bold; margin-bottom: 10px;"
             f" background-color: transparent; color: {DraculaTheme.FOREGROUND};"
         )
+
+
+class ExportDialog(QDialog):
+    """Diálogo pós-exportação: abrir arquivo, abrir pasta ou fechar."""
+
+    def __init__(self, output_path: Path, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self._output_path = output_path
+        self._is_file = output_path.is_file()
+        self.setWindowTitle("Exportação concluída")
+        self.setModal(True)
+        self.setMinimumWidth(420)
+        self._setup_ui()
+
+    def _setup_ui(self) -> None:
+        self.setStyleSheet(f"""
+            QDialog {{
+                background-color: {DraculaTheme.BACKGROUND};
+                border: 1px solid {DraculaTheme.COMMENT};
+                border-radius: 10px;
+            }}
+        """)
+        layout = QVBoxLayout(self)
+        layout.setSpacing(16)
+        layout.setContentsMargins(24, 24, 24, 24)
+
+        lbl_title = QLabel("Exportação concluída")
+        lbl_title.setStyleSheet(
+            f"color: {DraculaTheme.GREEN}; font-size: 18px; font-weight: bold;"
+        )
+        lbl_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(lbl_title)
+
+        display = self._output_path.name if self._is_file else str(self._output_path)
+        lbl_path = QLabel(display)
+        lbl_path.setWordWrap(True)
+        lbl_path.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        lbl_path.setStyleSheet(
+            f"color: {DraculaTheme.FOREGROUND}; font-size: 13px;"
+        )
+        layout.addWidget(lbl_path)
+
+        btn_row = QHBoxLayout()
+        btn_row.setSpacing(10)
+
+        if self._is_file:
+            btn_open = QPushButton("Abrir Arquivo")
+            btn_open.setObjectName("actionBtn")
+            btn_open.setCursor(Qt.CursorShape.PointingHandCursor)
+            btn_open.clicked.connect(self._open_file)
+            btn_row.addWidget(btn_open)
+
+        btn_folder = QPushButton("Abrir Pasta")
+        btn_folder.setObjectName("secondaryBtn")
+        btn_folder.setCursor(Qt.CursorShape.PointingHandCursor)
+        btn_folder.clicked.connect(self._open_folder)
+        btn_row.addWidget(btn_folder)
+
+        btn_ok = QPushButton("OK")
+        btn_ok.setCursor(Qt.CursorShape.PointingHandCursor)
+        btn_ok.clicked.connect(self.accept)
+        btn_row.addWidget(btn_ok)
+
+        layout.addLayout(btn_row)
+
+    def _open_file(self) -> None:
+        QDesktopServices.openUrl(QUrl.fromLocalFile(str(self._output_path)))
+        self.accept()
+
+    def _open_folder(self) -> None:
+        folder = self._output_path.parent if self._is_file else self._output_path
+        QDesktopServices.openUrl(QUrl.fromLocalFile(str(folder)))
+        self.accept()
 
 
 # "A ordem é o prazer da razão; a desordem é a delícia da imaginação." — Paul Claudel
