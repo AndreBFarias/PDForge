@@ -40,7 +40,7 @@ LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 LOG_BACKUP_COUNT = 7          # Manter 7 dias de logs
 
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.1.0"
 APP_NAME = "PDForge"
 
 
