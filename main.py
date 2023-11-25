@@ -1,5 +1,5 @@
 """
-PDFForge — Entry point CLI.
+PDForge — Entry point CLI.
 
 Uso:
     python main.py
@@ -9,6 +9,7 @@ Uso:
     python main.py --debug caminho/arquivo.pdf
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -31,9 +32,10 @@ from utils.file_utils import setup_logging
     help="Modo lote: PATH deve ser um diretório de PDFs.",
 )
 def main(path: str | None, no_gpu: bool, debug: bool, batch: bool) -> None:
-    """PDFForge — Manipulação avançada de PDFs via GUI."""
+    """PDForge — Manipulação avançada de PDFs via GUI."""
+    debug = debug or os.environ.get("PDFFORGE_DEBUG", "").lower() in ("1", "true", "yes")
     logger = setup_logging(debug=debug)
-    logger.info("PDFForge iniciando (gpu=%s, debug=%s, batch=%s)", not no_gpu, debug, batch)
+    logger.info("PDForge iniciando (gpu=%s, debug=%s, batch=%s)", not no_gpu, debug, batch)
 
     if batch:
         _run_batch_cli(path, no_gpu, logger)
@@ -43,6 +45,7 @@ def main(path: str | None, no_gpu: bool, debug: bool, batch: bool) -> None:
 
 
 def _run_gui(path: str | None, use_gpu: bool) -> None:
+    from PyQt6.QtGui import QIcon
     from PyQt6.QtWidgets import QApplication
     from ui.main_window import MainWindow
 
@@ -55,6 +58,10 @@ def _run_gui(path: str | None, use_gpu: bool) -> None:
             click.echo(f"Aviso: '{path}' não é um PDF válido. Iniciando sem arquivo.", err=True)
 
     app = QApplication(sys.argv)
+    app.setDesktopFileName("pdfforge")
+    icon_path = Path(__file__).parent / "assets" / "PDForge.png"
+    if icon_path.exists():
+        app.setWindowIcon(QIcon(str(icon_path)))
     window = MainWindow(initial_pdf=initial_pdf, use_gpu=use_gpu)
     window.show()
     sys.exit(app.exec())

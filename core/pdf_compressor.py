@@ -12,7 +12,7 @@ try:
 except ImportError:
     CV2_AVAILABLE = False
 
-logger = logging.getLogger("pdfforge")
+logger = logging.getLogger("pdfforge.compressor")
 
 COMPRESS_PROFILES: dict[str, dict] = {
     "leve": {"dpi": 150, "jpeg_quality": 85, "deflate_images": False},
@@ -75,7 +75,12 @@ class PDFCompressor:
                     img_array = np.frombuffer(pix.samples, dtype=np.uint8).reshape(
                         pix.height, pix.width, pix.n
                     )
-                    gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY) if pix.n >= 3 else img_array
+                    if pix.n == 4:
+                        gray = cv2.cvtColor(img_array, cv2.COLOR_RGBA2GRAY)
+                    elif pix.n == 3:
+                        gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
+                    else:
+                        gray = img_array
                     lap_var = cv2.Laplacian(gray, cv2.CV_64F).var()
                     variances.append(lap_var)
                 except Exception as exc:
@@ -84,8 +89,15 @@ class PDFCompressor:
         total_text = sum(text_counts)
         total_images = sum(image_counts)
 
-        if variances and (sum(variances) / len(variances)) < 50:
-            return PageContentType.SCANNED
+        SCANNED_THRESHOLD = 100
+        if variances:
+            avg_variance = sum(variances) / len(variances)
+            logger.debug(
+                "Variância Laplaciana média: %.2f (threshold: %d)",
+                avg_variance, SCANNED_THRESHOLD,
+            )
+            if avg_variance < SCANNED_THRESHOLD:
+                return PageContentType.SCANNED
 
         if total_images == 0 and total_text > 0:
             return PageContentType.TEXT_ONLY
@@ -143,6 +155,7 @@ class PDFCompressor:
                                 [cv2.IMWRITE_JPEG_QUALITY, quality]
                             )
                             rect = page.rect
+                            page.delete_image(xref)
                             page.insert_image(rect, stream=jpeg_bytes.tobytes())
                         except Exception as exc:
                             logger.debug("Nao foi possivel recomprimir imagem xref=%d: %s", xref, exc)

@@ -40,14 +40,16 @@ class ReplaceWorker(QThread):
     def run(self) -> None:
         try:
             doc = fitz.open(str(self._pdf_path))
-            editor = PDFEditor()
-            result = editor.replace_text(
-                doc,
-                self._pairs,
-                self._output_path,
-                self._case_sensitive,
-            )
-            doc.close()
+            try:
+                editor = PDFEditor()
+                result = editor.replace_text(
+                    doc,
+                    self._pairs,
+                    self._output_path,
+                    self._case_sensitive,
+                )
+            finally:
+                doc.close()
             self.finished.emit(result)
         except Exception as exc:
             logger.error("ReplaceWorker falhou: %s", exc, exc_info=True)
@@ -101,13 +103,14 @@ class OCRWorker(QThread):
         try:
             engine = OCREngine(languages=self._languages, use_gpu=self._use_gpu)
             doc = fitz.open(str(self._pdf_path))
+            try:
+                def _on_progress(cur: int, tot: int, msg: str) -> None:
+                    self.progress.emit(cur, tot, msg)
 
-            def _on_progress(cur: int, tot: int, msg: str) -> None:
-                self.progress.emit(cur, tot, msg)
-
-            results = engine.recognize_document(doc, on_progress=_on_progress)
-            engine.save_ocr_layer(doc, results, self._output_path)
-            doc.close()
+                results = engine.recognize_document(doc, on_progress=_on_progress)
+                engine.save_ocr_layer(doc, results, self._output_path)
+            finally:
+                doc.close()
             self.finished.emit(results)
         except Exception as exc:
             logger.error("OCRWorker falhou: %s", exc, exc_info=True)
@@ -226,14 +229,16 @@ class SplitWorker(QThread):
     def run(self) -> None:
         try:
             doc = fitz.open(str(self._pdf_path))
-            splitter = PDFSplitter()
-            if self._mode == "range" and self._ranges:
-                result = splitter.split_by_range(doc, self._ranges, self._output_dir, self._base_name)
-            elif self._mode == "size":
-                result = splitter.split_by_size(doc, self._max_mb, self._output_dir, self._base_name)
-            else:
-                result = splitter.split_by_bookmarks(doc, self._output_dir, self._base_name)
-            doc.close()
+            try:
+                splitter = PDFSplitter()
+                if self._mode == "range" and self._ranges:
+                    result = splitter.split_by_range(doc, self._ranges, self._output_dir, self._base_name)
+                elif self._mode == "size":
+                    result = splitter.split_by_size(doc, self._max_mb, self._output_dir, self._base_name)
+                else:
+                    result = splitter.split_by_bookmarks(doc, self._output_dir, self._base_name)
+            finally:
+                doc.close()
             self.finished.emit(result)
         except Exception as exc:
             logger.error("SplitWorker falhou: %s", exc, exc_info=True)
@@ -253,8 +258,10 @@ class CompressWorker(QThread):
     def run(self) -> None:
         try:
             doc = fitz.open(str(self._pdf_path))
-            result = PDFCompressor().compress(doc, self._output_path, self._profile)
-            doc.close()
+            try:
+                result = PDFCompressor().compress(doc, self._output_path, self._profile)
+            finally:
+                doc.close()
             self.finished.emit(result)
         except Exception as exc:
             logger.error("CompressWorker falhou: %s", exc, exc_info=True)
@@ -272,8 +279,10 @@ class SignatureWorker(QThread):
     def run(self) -> None:
         try:
             doc = fitz.open(str(self._pdf_path))
-            regions = SignatureHandler().detect_signatures(doc)
-            doc.close()
+            try:
+                regions = SignatureHandler().detect_signatures(doc)
+            finally:
+                doc.close()
             self.finished.emit(regions)
         except Exception as exc:
             logger.error("SignatureWorker falhou: %s", exc, exc_info=True)
@@ -301,8 +310,10 @@ class ReinsertWorker(QThread):
     def run(self) -> None:
         try:
             doc = fitz.open(str(self._pdf_path))
-            ok = SignatureHandler().reinsert_signature(doc, self._region, self._image_path, self._output_path)
-            doc.close()
+            try:
+                ok = SignatureHandler().reinsert_signature(doc, self._region, self._image_path, self._output_path)
+            finally:
+                doc.close()
             self.finished.emit(ok)
         except Exception as exc:
             logger.error("ReinsertWorker falhou: %s", exc, exc_info=True)
@@ -320,11 +331,241 @@ class ClassifyWorker(QThread):
     def run(self) -> None:
         try:
             doc = fitz.open(str(self._pdf_path))
-            result = DocumentClassifier().classify(doc)
-            doc.close()
+            try:
+                result = DocumentClassifier().classify(doc)
+            finally:
+                doc.close()
             self.finished.emit(result)
         except Exception as exc:
             logger.error("ClassifyWorker falhou: %s", exc, exc_info=True)
+            self.error.emit(str(exc))
+
+
+class ClassifyBatchWorker(QThread):
+    finished = pyqtSignal(object)  # list[tuple[str, ClassificationResult]]
+    progress = pyqtSignal(int, int, str)
+    error = pyqtSignal(str)
+
+    def __init__(self, folder: Path, parent=None) -> None:
+        super().__init__(parent)
+        self._folder = folder
+
+    def run(self) -> None:
+        try:
+            pdfs = sorted(self._folder.glob("*.pdf"))
+            if not pdfs:
+                self.finished.emit([])
+                return
+
+            classifier = DocumentClassifier()
+            results: list[tuple[str, ClassificationResult]] = []
+
+            for i, pdf_path in enumerate(pdfs):
+                self.progress.emit(i + 1, len(pdfs), pdf_path.name)
+                doc = fitz.open(str(pdf_path))
+                try:
+                    result = classifier.classify(doc)
+                finally:
+                    doc.close()
+                results.append((pdf_path.name, result))
+
+            self.finished.emit(results)
+        except Exception as exc:
+            logger.error("ClassifyBatchWorker falhou: %s", exc, exc_info=True)
+            self.error.emit(str(exc))
+
+
+class SecurityWorker(QThread):
+    finished = pyqtSignal(object)
+    error = pyqtSignal(str)
+
+    def __init__(
+        self,
+        mode: str,
+        input_path: Path,
+        output_path: Path,
+        password: str,
+        owner_password: str | None = None,
+        permissions: int | None = None,
+        parent=None,
+    ) -> None:
+        super().__init__(parent)
+        self._mode = mode
+        self._input_path = input_path
+        self._output_path = output_path
+        self._password = password
+        self._owner_password = owner_password
+        self._permissions = permissions
+
+    def run(self) -> None:
+        try:
+            from core.pdf_security import PDFSecurity
+            security = PDFSecurity()
+            if self._mode == "encrypt":
+                kwargs = {
+                    "input_path": self._input_path,
+                    "output_path": self._output_path,
+                    "user_password": self._password,
+                }
+                if self._owner_password:
+                    kwargs["owner_password"] = self._owner_password
+                if self._permissions is not None:
+                    kwargs["permissions"] = self._permissions
+                result = security.encrypt(**kwargs)
+            else:
+                result = security.decrypt(
+                    self._input_path,
+                    self._output_path,
+                    self._password,
+                )
+            self.finished.emit(result)
+        except Exception as exc:
+            logger.error("SecurityWorker falhou: %s", exc)
+            self.error.emit(str(exc))
+
+
+class ImageConvertWorker(QThread):
+    finished = pyqtSignal(object)
+    progress = pyqtSignal(int, int, str)
+    error = pyqtSignal(str)
+
+    def __init__(
+        self,
+        mode: str,
+        input_path: Path | None = None,
+        output_path: Path | None = None,
+        output_dir: Path | None = None,
+        image_paths: list[Path] | None = None,
+        fmt: str = "png",
+        dpi: int = 150,
+        parent=None,
+    ) -> None:
+        super().__init__(parent)
+        self._mode = mode
+        self._input_path = input_path
+        self._output_path = output_path
+        self._output_dir = output_dir
+        self._image_paths = image_paths or []
+        self._fmt = fmt
+        self._dpi = dpi
+
+    def run(self) -> None:
+        try:
+            from core.pdf_image_converter import PDFImageConverter
+            converter = PDFImageConverter()
+            if self._mode == "pdf_to_images":
+                result = converter.pdf_to_images(
+                    self._input_path,
+                    self._output_dir,
+                    fmt=self._fmt,
+                    dpi=self._dpi,
+                )
+            else:
+                result = converter.images_to_pdf(
+                    self._image_paths,
+                    self._output_path,
+                )
+            self.finished.emit(result)
+        except Exception as exc:
+            logger.error("ImageConvertWorker falhou: %s", exc)
+            self.error.emit(str(exc))
+
+
+class WatermarkWorker(QThread):
+    finished = pyqtSignal(object)
+    error = pyqtSignal(str)
+
+    def __init__(
+        self,
+        mode: str,
+        input_path: Path,
+        output_path: Path,
+        config=None,
+        image_path: Path | None = None,
+        opacity: float = 0.3,
+        scale: float = 1.0,
+        parent=None,
+    ) -> None:
+        super().__init__(parent)
+        self._mode = mode
+        self._input_path = input_path
+        self._output_path = output_path
+        self._config = config
+        self._image_path = image_path
+        self._opacity = opacity
+        self._scale = scale
+
+    def run(self) -> None:
+        try:
+            from core.pdf_watermark import PDFWatermark
+            wm = PDFWatermark()
+            if self._mode == "text":
+                result = wm.apply_text(
+                    self._input_path,
+                    self._output_path,
+                    self._config,
+                )
+            else:
+                result = wm.apply_image(
+                    self._input_path,
+                    self._output_path,
+                    self._image_path,
+                    opacity=self._opacity,
+                    scale=self._scale,
+                )
+            self.finished.emit(result)
+        except Exception as exc:
+            logger.error("WatermarkWorker falhou: %s", exc)
+            self.error.emit(str(exc))
+
+
+class ReorderWorker(QThread):
+    finished = pyqtSignal(object)
+    error = pyqtSignal(str)
+
+    def __init__(
+        self,
+        mode: str,
+        input_path: Path,
+        output_path: Path,
+        new_order: list[int] | None = None,
+        pages_to_delete: list[int] | None = None,
+        page_index: int = 0,
+        parent=None,
+    ) -> None:
+        super().__init__(parent)
+        self._mode = mode
+        self._input_path = input_path
+        self._output_path = output_path
+        self._new_order = new_order or []
+        self._pages_to_delete = pages_to_delete or []
+        self._page_index = page_index
+
+    def run(self) -> None:
+        try:
+            from core.pdf_page_organizer import PDFPageOrganizer
+            org = PDFPageOrganizer()
+            if self._mode == "reorder":
+                result = org.reorder(
+                    self._input_path,
+                    self._output_path,
+                    self._new_order,
+                )
+            elif self._mode == "delete":
+                result = org.delete_pages(
+                    self._input_path,
+                    self._output_path,
+                    self._pages_to_delete,
+                )
+            else:
+                result = org.duplicate_page(
+                    self._input_path,
+                    self._output_path,
+                    self._page_index,
+                )
+            self.finished.emit(result)
+        except Exception as exc:
+            logger.error("ReorderWorker falhou: %s", exc)
             self.error.emit(str(exc))
 
 

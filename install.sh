@@ -28,10 +28,16 @@ rsync -a --delete \
     --exclude=".venv/" \
     --exclude="__pycache__/" \
     --exclude=".git/" \
+    --exclude=".github/" \
     --exclude="tests/" \
     --exclude="sprints/" \
+    --exclude="scripts/" \
+    --exclude="packaging/" \
     --exclude="QR-Code-Void-Generator/" \
-    --exclude="sprint-*.md" \
+    --exclude="docs/sprints/" \
+    --exclude="README-exemplo.md" \
+    --exclude="requirements-dev.txt" \
+    --exclude=".pre-commit-config.yaml" \
     --exclude="*.pyc" \
     "$SCRIPT_DIR/" "$APP_DIR/"
 
@@ -40,10 +46,16 @@ python3 -m venv "$VENV_DIR"
 "$VENV_DIR/bin/pip" install --upgrade pip -q
 "$VENV_DIR/bin/pip" install -r "$APP_DIR/requirements.txt" -q
 
-echo "Instalando ícone..."
+echo "Instalando ícones..."
 if [ -f "$APP_DIR/assets/icon.png" ]; then
     cp "$APP_DIR/assets/icon.png" "$ICON_DIR/$APP_NAME.png"
 fi
+for SIZE in 48 64 128 256 512; do
+    SDIR="$HOME/.local/share/icons/hicolor/${SIZE}x${SIZE}/apps"
+    mkdir -p "$SDIR"
+    [ -f "$APP_DIR/assets/icons/pdfforge-${SIZE}.png" ] && \
+        cp "$APP_DIR/assets/icons/pdfforge-${SIZE}.png" "$SDIR/$APP_NAME.png"
+done
 
 echo "Criando entrada .desktop..."
 cat > "$DESKTOP_DIR/$APP_NAME.desktop" <<EOF
@@ -70,7 +82,8 @@ echo "Atualizando base de dados de aplicações..."
 update-desktop-database "$DESKTOP_DIR" 2>/dev/null || true
 gtk-update-icon-cache -f -t "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
 
-if command -v gsettings &>/dev/null; then
+if command -v gsettings &>/dev/null && \
+   gsettings list-schemas 2>/dev/null | grep -q org.gnome.shell; then
     FAVORITES=$(gsettings get org.gnome.shell favorite-apps)
     if [[ "$FAVORITES" != *"$APP_NAME"* ]]; then
         NEW_FAV=$(echo "$FAVORITES" | sed "s/\]/, '$APP_NAME.desktop']/")
@@ -78,4 +91,4 @@ if command -v gsettings &>/dev/null; then
     fi
 fi
 
-echo "Instalacao concluida. Execute: pdfforge"
+echo "Instalação concluída. Execute: pdfforge"

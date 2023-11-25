@@ -21,11 +21,9 @@ logs/
 *.pkl
 *.joblib
 
-# Evidencias de IA
+# Temporarios de projeto
 Task_Final/
 IMPORTANT.md
-*.claude.md
-*_AI_*.md
 
 # Secrets
 .env
@@ -43,16 +41,17 @@ IMPORTANT.md
 .DS_Store
 Thumbs.db
 
-# Projeto de referencia (nao faz parte do PDForge)
+# Projeto de referencia (externo ao PDForge)
 QR-Code-Void-Generator/
 
-# Planejamento interno
-sprints/
-
-# Config de versao local
+# Config de versão local
 =*.*.*/
 
 # Cobertura de testes
 .coverage
 htmlcov/
 coverage.xml
+
+# Artefatos temporários
+=*
+venv_requirements-dev/

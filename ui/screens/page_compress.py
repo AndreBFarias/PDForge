@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
 from ui.workers import CompressWorker
 
@@ -46,7 +46,7 @@ class PageCompress(QWidget):
         lbl_out = QLabel("Arquivo de saída")
         lbl_out.setStyleSheet(f"color: {DraculaTheme.COMMENT}; font-weight: bold;")
         layout.addWidget(lbl_out)
-        self._btn_out = FilePathButton("Selecionar arquivo de saída (.pdf)  ", mode="pdf")
+        self._btn_out = FilePathButton("Selecionar arquivo de saída (.pdf)  ", mode="save")
         layout.addWidget(self._btn_out)
 
         lbl_profile = QLabel("Perfil de compressão")
@@ -153,6 +153,9 @@ class PageCompress(QWidget):
                 f"Concluido: {result.original_size_mb:.2f} MB -> {result.compressed_size_mb:.2f} MB "
                 f"({result.reduction_pct:.1f}% de redução)"
             )
+            out = self._btn_out.current_path
+            if out and out.exists():
+                ExportDialog(out, self).exec()
         else:
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.RED};")
             self._lbl_status.setText(f"Erro: {result.error}")

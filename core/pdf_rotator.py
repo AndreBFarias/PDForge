@@ -4,7 +4,7 @@ from pathlib import Path
 
 import fitz
 
-logger = logging.getLogger("pdfforge")
+logger = logging.getLogger("pdfforge.rotator")
 
 VALID_ANGLES = {90, 180, 270}
 

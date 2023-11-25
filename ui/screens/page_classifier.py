@@ -18,7 +18,7 @@ from PyQt6.QtWidgets import (
 
 from ui.components import FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
-from ui.workers import ClassifyWorker
+from ui.workers import ClassifyBatchWorker, ClassifyWorker
 
 logger = logging.getLogger("pdfforge.screens.classifier")
 
@@ -118,27 +118,22 @@ class PageClassifier(QWidget):
         self._worker.start()
 
     def _classify_batch(self, folder: Path) -> None:
-        import fitz
-        from core.document_classifier import DocumentClassifier
-
-        pdfs = list(folder.glob("*.pdf"))
-        if not pdfs:
-            self._toast.show_message("Nenhum PDF encontrado na pasta.")
+        if self._worker and self._worker.isRunning():
             return
 
         self._btn_run.setEnabled(False)
         self._btn_run.setText("Classificando...")
-        try:
-            classifier = DocumentClassifier()
-            for pdf_path in pdfs:
-                doc = fitz.open(str(pdf_path))
-                result = classifier.classify(doc)
-                doc.close()
-                self._add_row(pdf_path.name, result)
-        except Exception as exc:
-            logger.error("Erro no lote: %s", exc)
-        finally:
-            self._restore_btn()
+        self._worker = ClassifyBatchWorker(folder=folder)
+        self._worker.finished.connect(self._on_batch_finished)
+        self._worker.error.connect(self._on_error)
+        self._worker.start()
+
+    def _on_batch_finished(self, results: list) -> None:
+        if not results:
+            self._toast.show_message("Nenhum PDF encontrado na pasta.")
+        for filename, result in results:
+            self._add_row(filename, result)
+        self._restore_btn()
 
     def _add_row(self, filename: str, result) -> None:
         row = self._table.rowCount()
