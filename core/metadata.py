@@ -1,13 +1,22 @@
 import logging
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from dataclasses import dataclass, asdict
 
 import fitz
 
 logger = logging.getLogger("pdfforge.metadata")
 
 # Chaves suportadas pelo padrão PDF/PyMuPDF
-METADATA_KEYS = ("title", "author", "subject", "keywords", "creator", "producer", "creationDate", "modDate")
+METADATA_KEYS = (
+    "title",
+    "author",
+    "subject",
+    "keywords",
+    "creator",
+    "producer",
+    "creationDate",
+    "modDate",
+)
 
 
 @dataclass

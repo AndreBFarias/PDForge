@@ -28,7 +28,9 @@ _FORMAT_MAP = {"PNG": "png", "JPEG": "jpeg", "TIFF": "tiff"}
 
 class PageImages(QWidget):
     def __init__(
-        self, use_gpu: bool = True, parent: QWidget | None = None,
+        self,
+        use_gpu: bool = True,
+        parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._use_gpu = use_gpu
@@ -75,7 +77,8 @@ class PageImages(QWidget):
         )
         layout.addWidget(lbl)
         self._p2i_btn_in = FilePathButton(
-            "Selecionar PDF  ", mode="pdf",
+            "Selecionar PDF  ",
+            mode="pdf",
         )
         layout.addWidget(self._p2i_btn_in)
 
@@ -85,7 +88,8 @@ class PageImages(QWidget):
         )
         layout.addWidget(lbl_dir)
         self._p2i_btn_dir = FilePathButton(
-            "Selecionar pasta  ", mode="dir",
+            "Selecionar pasta  ",
+            mode="dir",
         )
         layout.addWidget(self._p2i_btn_dir)
 
@@ -115,7 +119,8 @@ class PageImages(QWidget):
         btn.setObjectName("actionBtn")
         btn.setCursor(Qt.CursorShape.PointingHandCursor)
         btn.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Fixed,
         )
         btn.clicked.connect(self._pdf_to_images)
         layout.addWidget(btn)
@@ -145,7 +150,8 @@ class PageImages(QWidget):
         )
         layout.addWidget(lbl_out)
         self._i2p_btn_out = FilePathButton(
-            "Selecionar arquivo de saída (.pdf)  ", mode="save",
+            "Selecionar arquivo de saída (.pdf)  ",
+            mode="save",
         )
         layout.addWidget(self._i2p_btn_out)
 
@@ -153,7 +159,8 @@ class PageImages(QWidget):
         btn.setObjectName("actionBtn")
         btn.setCursor(Qt.CursorShape.PointingHandCursor)
         btn.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Fixed,
         )
         btn.clicked.connect(self._images_to_pdf)
         layout.addWidget(btn)
@@ -163,7 +170,9 @@ class PageImages(QWidget):
         return tab
 
     def refresh_state(
-        self, pdf_path: Path | None, output_dir: Path | None,
+        self,
+        pdf_path: Path | None,
+        output_dir: Path | None,
     ) -> None:
         if pdf_path:
             self._p2i_btn_in.set_path(pdf_path)

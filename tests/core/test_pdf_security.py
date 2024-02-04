@@ -1,8 +1,6 @@
-from pathlib import Path
-
 import fitz
 
-from core.pdf_security import PDFSecurity, SecurityResult
+from core.pdf_security import PDFSecurity
 
 
 def test_encrypt_pdf(sample_pdf_path, tmp_output_dir):
@@ -41,7 +39,8 @@ def test_encrypt_with_permissions(sample_pdf_path, tmp_output_dir):
     security = PDFSecurity()
     output = tmp_output_dir / "perm_enc.pdf"
     result = security.encrypt(
-        sample_pdf_path, output,
+        sample_pdf_path,
+        output,
         user_password="test",
         permissions=fitz.PDF_PERM_PRINT,
     )

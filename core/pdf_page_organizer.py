@@ -32,22 +32,24 @@ class PDFPageOrganizer:
                     doc.close()
                     return ReorderResult(
                         success=False,
-                        error=(
-                            f"Indice de pagina invalido: {idx}"
-                        ),
+                        error=(f"Indice de pagina invalido: {idx}"),
                     )
             doc.select(new_order)
             output_path.parent.mkdir(
-                parents=True, exist_ok=True,
+                parents=True,
+                exist_ok=True,
             )
             doc.save(
-                str(output_path), garbage=4, deflate=True,
+                str(output_path),
+                garbage=4,
+                deflate=True,
             )
             pages = len(doc)
             doc.close()
             logger.info(
                 "Paginas reordenadas: %d paginas -> %s",
-                pages, output_path.name,
+                pages,
+                output_path.name,
             )
             return ReorderResult(
                 output_path=output_path,
@@ -56,7 +58,8 @@ class PDFPageOrganizer:
         except Exception as exc:
             logger.error("Erro ao reordenar: %s", exc)
             return ReorderResult(
-                success=False, error=str(exc),
+                success=False,
+                error=str(exc),
             )
 
     def delete_pages(
@@ -68,32 +71,29 @@ class PDFPageOrganizer:
         try:
             doc = fitz.open(str(input_path))
             total = len(doc)
-            keep = [
-                i for i in range(total)
-                if i not in pages_to_delete
-            ]
+            keep = [i for i in range(total) if i not in pages_to_delete]
             if not keep:
                 doc.close()
                 return ReorderResult(
                     success=False,
-                    error=(
-                        "Nao e possivel deletar"
-                        " todas as paginas"
-                    ),
+                    error=("Nao e possivel deletar todas as paginas"),
                 )
             doc.select(keep)
             output_path.parent.mkdir(
-                parents=True, exist_ok=True,
+                parents=True,
+                exist_ok=True,
             )
             doc.save(
-                str(output_path), garbage=4, deflate=True,
+                str(output_path),
+                garbage=4,
+                deflate=True,
             )
             pages = len(doc)
             doc.close()
             logger.info(
-                "Paginas deletadas: %d removidas,"
-                " %d restantes",
-                len(pages_to_delete), pages,
+                "Paginas deletadas: %d removidas, %d restantes",
+                len(pages_to_delete),
+                pages,
             )
             return ReorderResult(
                 output_path=output_path,
@@ -101,10 +101,12 @@ class PDFPageOrganizer:
             )
         except Exception as exc:
             logger.error(
-                "Erro ao deletar paginas: %s", exc,
+                "Erro ao deletar paginas: %s",
+                exc,
             )
             return ReorderResult(
-                success=False, error=str(exc),
+                success=False,
+                error=str(exc),
             )
 
     def duplicate_page(
@@ -119,25 +121,26 @@ class PDFPageOrganizer:
                 doc.close()
                 return ReorderResult(
                     success=False,
-                    error=(
-                        "Indice de pagina"
-                        f" invalido: {page_index}"
-                    ),
+                    error=(f"Indice de pagina invalido: {page_index}"),
                 )
             order = list(range(len(doc)))
             order.insert(page_index + 1, page_index)
             doc.select(order)
             output_path.parent.mkdir(
-                parents=True, exist_ok=True,
+                parents=True,
+                exist_ok=True,
             )
             doc.save(
-                str(output_path), garbage=4, deflate=True,
+                str(output_path),
+                garbage=4,
+                deflate=True,
             )
             pages = len(doc)
             doc.close()
             logger.info(
                 "Pagina %d duplicada: %d paginas total",
-                page_index, pages,
+                page_index,
+                pages,
             )
             return ReorderResult(
                 output_path=output_path,
@@ -145,10 +148,12 @@ class PDFPageOrganizer:
             )
         except Exception as exc:
             logger.error(
-                "Erro ao duplicar pagina: %s", exc,
+                "Erro ao duplicar pagina: %s",
+                exc,
             )
             return ReorderResult(
-                success=False, error=str(exc),
+                success=False,
+                error=str(exc),
             )
 
     def get_page_thumbnails(
@@ -161,7 +166,8 @@ class PDFPageOrganizer:
         thumbnails = []
         for page in doc:
             pix = page.get_pixmap(
-                matrix=mat, alpha=False,
+                matrix=mat,
+                alpha=False,
             )
             thumbnails.append(pix.tobytes("png"))
         doc.close()

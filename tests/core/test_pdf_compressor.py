@@ -1,5 +1,6 @@
 import fitz
-from core.pdf_compressor import PDFCompressor, PageContentType
+
+from core.pdf_compressor import PageContentType, PDFCompressor
 
 
 def test_analyze_content_type(sample_pdf_path):

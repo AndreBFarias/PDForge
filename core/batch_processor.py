@@ -1,12 +1,12 @@
 import logging
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
 
 import fitz
 
-from utils.file_utils import list_pdfs, ensure_output_path
+from utils.file_utils import ensure_output_path, list_pdfs
 
 logger = logging.getLogger("pdfforge.batch")
 

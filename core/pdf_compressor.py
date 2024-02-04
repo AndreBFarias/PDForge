@@ -8,6 +8,7 @@ import fitz
 try:
     import cv2
     import numpy as np
+
     CV2_AVAILABLE = True
 except ImportError:
     CV2_AVAILABLE = False
@@ -50,9 +51,7 @@ class CompressResult:
 
 
 class PDFCompressor:
-    def analyze_content_type(
-        self, doc: fitz.Document, sample_pages: int = 5
-    ) -> PageContentType:
+    def analyze_content_type(self, doc: fitz.Document, sample_pages: int = 5) -> PageContentType:
         total = doc.page_count
         step = max(1, total // sample_pages)
         indices = list(range(0, total, step))[:sample_pages]
@@ -94,7 +93,8 @@ class PDFCompressor:
             avg_variance = sum(variances) / len(variances)
             logger.debug(
                 "Variância Laplaciana média: %.2f (threshold: %d)",
-                avg_variance, SCANNED_THRESHOLD,
+                avg_variance,
+                SCANNED_THRESHOLD,
             )
             if avg_variance < SCANNED_THRESHOLD:
                 return PageContentType.SCANNED
@@ -128,6 +128,7 @@ class PDFCompressor:
         content_type = self.analyze_content_type(doc)
 
         import io
+
         buf_orig = io.BytesIO()
         doc.save(buf_orig)
         original_mb = buf_orig.tell() / (1024 * 1024)
@@ -138,6 +139,7 @@ class PDFCompressor:
 
             if CV2_AVAILABLE:
                 import numpy as np
+
                 for page in new_doc:
                     for img_info in page.get_images(full=True):
                         xref = img_info[0]
@@ -151,14 +153,15 @@ class PDFCompressor:
                             if pix.n == 4:
                                 img_array = cv2.cvtColor(img_array, cv2.COLOR_RGBA2RGB)
                             _, jpeg_bytes = cv2.imencode(
-                                ".jpg", img_array,
-                                [cv2.IMWRITE_JPEG_QUALITY, quality]
+                                ".jpg", img_array, [cv2.IMWRITE_JPEG_QUALITY, quality]
                             )
                             rect = page.rect
                             page.delete_image(xref)
                             page.insert_image(rect, stream=jpeg_bytes.tobytes())
                         except Exception as exc:
-                            logger.debug("Nao foi possivel recomprimir imagem xref=%d: %s", xref, exc)
+                            logger.debug(
+                                "Nao foi possivel recomprimir imagem xref=%d: %s", xref, exc
+                            )
 
             output_path.parent.mkdir(parents=True, exist_ok=True)
             new_doc.save(
@@ -170,11 +173,18 @@ class PDFCompressor:
             new_doc.close()
 
             compressed_mb = output_path.stat().st_size / (1024 * 1024)
-            reduction = max(0.0, (original_mb - compressed_mb) / original_mb * 100) if original_mb > 0 else 0.0
+            reduction = (
+                max(0.0, (original_mb - compressed_mb) / original_mb * 100)
+                if original_mb > 0
+                else 0.0
+            )
 
             logger.info(
                 "Compressao concluida: %.2fMB -> %.2fMB (%.1f%%) perfil=%s",
-                original_mb, compressed_mb, reduction, profile,
+                original_mb,
+                compressed_mb,
+                reduction,
+                profile,
             )
             return CompressResult(
                 output_path=output_path,
@@ -197,10 +207,9 @@ class PDFCompressor:
                 error=str(exc),
             )
 
-    def get_compression_estimate(
-        self, doc: fitz.Document, profile: str
-    ) -> dict[str, float]:
+    def get_compression_estimate(self, doc: fitz.Document, profile: str) -> dict[str, float]:
         import io
+
         buf = io.BytesIO()
         doc.save(buf)
         original_mb = buf.tell() / (1024 * 1024)

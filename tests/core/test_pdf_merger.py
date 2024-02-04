@@ -1,6 +1,4 @@
-from pathlib import Path
-import fitz
-from core.pdf_merger import PDFMerger, MergeEntry
+from core.pdf_merger import MergeEntry, PDFMerger
 
 
 def test_merge_two_pdfs(sample_pdf_path, sample_multipage_path, tmp_output_dir):

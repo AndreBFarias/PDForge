@@ -2,7 +2,7 @@ import logging
 import logging.handlers
 from pathlib import Path
 
-from config.settings import LOG_DIR, LOG_FORMAT, LOG_DATE_FORMAT, LOG_BACKUP_COUNT
+from config.settings import LOG_BACKUP_COUNT, LOG_DATE_FORMAT, LOG_DIR, LOG_FORMAT
 
 
 def setup_logging(debug: bool = False) -> logging.Logger:

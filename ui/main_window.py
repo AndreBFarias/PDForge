@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QPainter, QPalette, QPixmap
 from PyQt6.QtWidgets import (
     QHBoxLayout,
     QLabel,
@@ -14,8 +15,6 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from PyQt6.QtGui import QColor, QIcon, QPainter, QPalette, QPixmap
-
 from config.settings import APP_NAME
 from core.pdf_reader import PDFReader
 from ui.components import Toast
@@ -24,9 +23,9 @@ from ui.screens.page_batch import PageBatch
 from ui.screens.page_classifier import PageClassifier
 from ui.screens.page_compress import PageCompress
 from ui.screens.page_editor import PageEditor
+from ui.screens.page_images import PageImages
 from ui.screens.page_merge import PageMerge
 from ui.screens.page_ocr import PageOCR
-from ui.screens.page_images import PageImages
 from ui.screens.page_organizer import PageOrganizer
 from ui.screens.page_security import PageSecurity
 from ui.screens.page_signature import PageSignature
@@ -69,7 +68,6 @@ _SIDEBAR_ITEMS = [
 
 
 class MainWindow(QMainWindow):
-
     def __init__(
         self,
         initial_pdf: Path | None = None,
@@ -120,7 +118,8 @@ class MainWindow(QMainWindow):
         if logo_path.exists():
             logo_label = QLabel()
             logo_pixmap = QPixmap(str(logo_path)).scaledToHeight(
-                56, Qt.TransformationMode.SmoothTransformation,
+                56,
+                Qt.TransformationMode.SmoothTransformation,
             )
             logo_label.setPixmap(logo_pixmap)
             logo_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -145,8 +144,7 @@ class MainWindow(QMainWindow):
 
         self._sidebar = QListWidget()
         self._sidebar.setStyleSheet(
-            f"font-size: 14px; font-weight: 600;"
-            f" background-color: {DraculaTheme.SIDEBAR};"
+            f"font-size: 14px; font-weight: 600; background-color: {DraculaTheme.SIDEBAR};"
         )
         self._sidebar.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self._sidebar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
@@ -191,17 +189,25 @@ class MainWindow(QMainWindow):
         self._page_batch = PageBatch(use_gpu=self._use_gpu)
 
         self._all_pages = (
-            self._page_editor, self._page_analyzer, self._page_ocr,
-            self._page_merge, self._page_split, self._page_compress,
-            self._page_security, self._page_images,
-            self._page_watermark, self._page_organizer,
-            self._page_signature, self._page_classifier,
+            self._page_editor,
+            self._page_analyzer,
+            self._page_ocr,
+            self._page_merge,
+            self._page_split,
+            self._page_compress,
+            self._page_security,
+            self._page_images,
+            self._page_watermark,
+            self._page_organizer,
+            self._page_signature,
+            self._page_classifier,
             self._page_batch,
         )
 
         for page in self._all_pages:
             page.setAttribute(
-                Qt.WidgetAttribute.WA_StyledBackground, True,
+                Qt.WidgetAttribute.WA_StyledBackground,
+                True,
             )
             page.setAutoFillBackground(True)
             pal_page = page.palette()
@@ -213,8 +219,12 @@ class MainWindow(QMainWindow):
             self._stack.addWidget(page)
 
         for page in (
-            self._page_editor, self._page_analyzer, self._page_ocr,
-            self._page_merge, self._page_split, self._page_batch,
+            self._page_editor,
+            self._page_analyzer,
+            self._page_ocr,
+            self._page_merge,
+            self._page_split,
+            self._page_batch,
         ):
             page.pdf_changed.connect(self._load_pdf)
 
@@ -227,9 +237,7 @@ class MainWindow(QMainWindow):
     def _setup_preview(self, parent_layout: QHBoxLayout) -> None:
         container = _OpaquePanel(DraculaTheme.BACKGROUND)
         container.setFixedWidth(420)
-        container.setStyleSheet(
-            f"border-left: 1px solid {DraculaTheme.CURRENT_LINE};"
-        )
+        container.setStyleSheet(f"border-left: 1px solid {DraculaTheme.CURRENT_LINE};")
         vbox = QVBoxLayout(container)
         vbox.setContentsMargins(16, 24, 16, 16)
         vbox.setSpacing(8)
@@ -252,13 +260,11 @@ class MainWindow(QMainWindow):
         def _info_label(key: str) -> tuple[QLabel, QLabel]:
             lk = QLabel(key)
             lk.setStyleSheet(
-                f"color: {DraculaTheme.COMMENT}; font-size: 12px;"
-                " background-color: transparent;"
+                f"color: {DraculaTheme.COMMENT}; font-size: 12px; background-color: transparent;"
             )
             lv = QLabel("—")
             lv.setStyleSheet(
-                f"color: {DraculaTheme.FOREGROUND}; font-size: 12px;"
-                " background-color: transparent;"
+                f"color: {DraculaTheme.FOREGROUND}; font-size: 12px; background-color: transparent;"
             )
             lv.setWordWrap(True)
             return lk, lv
@@ -346,14 +352,12 @@ class MainWindow(QMainWindow):
         if error:
             self._lbl_file_v.setText(f"Erro: {error[:50]}")
             self._lbl_file_v.setStyleSheet(
-                f"color: {DraculaTheme.RED}; font-size: 12px;"
-                " background-color: transparent;"
+                f"color: {DraculaTheme.RED}; font-size: 12px; background-color: transparent;"
             )
         else:
             self._lbl_file_v.setText("—")
             self._lbl_file_v.setStyleSheet(
-                f"color: {DraculaTheme.FOREGROUND}; font-size: 12px;"
-                " background-color: transparent;"
+                f"color: {DraculaTheme.FOREGROUND}; font-size: 12px; background-color: transparent;"
             )
         self._lbl_pages_v.setText("—")
         self._lbl_ver_v.setText("—")

@@ -23,9 +23,7 @@ class Toast(QWidget):
 
     def __init__(self, parent: QWidget) -> None:
         super().__init__(parent)
-        self.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint | Qt.WindowType.SubWindow
-        )
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.SubWindow)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setStyleSheet(f"""
             background-color: {DraculaTheme.CURRENT_LINE};
@@ -106,9 +104,7 @@ class FilePathButton(QPushButton):
     def _open_dialog(self) -> None:
         if self._mode == "pdf":
             start = str(self._path.parent) if self._path else ""
-            raw, _ = QFileDialog.getOpenFileName(
-                self, "Selecionar PDF", start, "PDF (*.pdf)"
-            )
+            raw, _ = QFileDialog.getOpenFileName(self, "Selecionar PDF", start, "PDF (*.pdf)")
         elif self._mode == "image":
             start = str(self._path.parent) if self._path else ""
             raw, _ = QFileDialog.getOpenFileName(
@@ -116,14 +112,10 @@ class FilePathButton(QPushButton):
             )
         elif self._mode == "save":
             start = str(self._path.parent) if self._path else ""
-            raw, _ = QFileDialog.getSaveFileName(
-                self, "Salvar como", start, "PDF (*.pdf)"
-            )
+            raw, _ = QFileDialog.getSaveFileName(self, "Salvar como", start, "PDF (*.pdf)")
         elif self._mode == "dir":
             start = str(self._path) if self._path else ""
-            raw = QFileDialog.getExistingDirectory(
-                self, "Selecionar Pasta", start
-            )
+            raw = QFileDialog.getExistingDirectory(self, "Selecionar Pasta", start)
         else:
             return
 
@@ -179,9 +171,7 @@ class ExportDialog(QDialog):
         layout.setContentsMargins(24, 24, 24, 24)
 
         lbl_title = QLabel("Exportação concluída")
-        lbl_title.setStyleSheet(
-            f"color: {DraculaTheme.GREEN}; font-size: 18px; font-weight: bold;"
-        )
+        lbl_title.setStyleSheet(f"color: {DraculaTheme.GREEN}; font-size: 18px; font-weight: bold;")
         lbl_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(lbl_title)
 
@@ -189,9 +179,7 @@ class ExportDialog(QDialog):
         lbl_path = QLabel(display)
         lbl_path.setWordWrap(True)
         lbl_path.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        lbl_path.setStyleSheet(
-            f"color: {DraculaTheme.FOREGROUND}; font-size: 13px;"
-        )
+        lbl_path.setStyleSheet(f"color: {DraculaTheme.FOREGROUND}; font-size: 13px;")
         layout.addWidget(lbl_path)
 
         btn_row = QHBoxLayout()

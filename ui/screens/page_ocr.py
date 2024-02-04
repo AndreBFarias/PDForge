@@ -177,7 +177,11 @@ class PageOCR(QWidget):
         preview_texts = []
         for page_num in sorted(results.keys())[:3]:
             page_result = results[page_num]
-            text = page_result.text.strip() if hasattr(page_result, "text") else str(page_result).strip()
+            text = (
+                page_result.text.strip()
+                if hasattr(page_result, "text")
+                else str(page_result).strip()
+            )
             if text:
                 preview_texts.append(f"[Pág. {page_num + 1}]\n{text[:300]}")
         self._txt_result.setPlainText("\n\n".join(preview_texts) or "(nenhum texto extraído)")

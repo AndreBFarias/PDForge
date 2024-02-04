@@ -137,9 +137,12 @@ class PageMerge(QWidget):
         self._btn_run.setText("MESCLAR")
         self._progress.setValue(100)
         self._lbl_status.setStyleSheet(f"color: {DraculaTheme.GREEN};")
-        size_mb = result.output_path.stat().st_size / (1024 * 1024) if result.output_path.exists() else 0
+        size_mb = (
+            result.output_path.stat().st_size / (1024 * 1024) if result.output_path.exists() else 0
+        )
         self._lbl_status.setText(
-            f"Concluido: {result.total_pages} paginas, {size_mb:.2f} MB -> {result.output_path.name}"
+            f"Concluido: {result.total_pages} paginas,"
+            f" {size_mb:.2f} MB -> {result.output_path.name}"
         )
         self.pdf_changed.emit(result.output_path)
         if result.output_path.exists():

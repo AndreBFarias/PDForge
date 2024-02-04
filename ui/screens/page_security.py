@@ -5,7 +5,6 @@ import fitz
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QCheckBox,
-    QHBoxLayout,
     QLabel,
     QLineEdit,
     QProgressBar,
@@ -25,7 +24,9 @@ logger = logging.getLogger("pdfforge.screens.security")
 
 class PageSecurity(QWidget):
     def __init__(
-        self, use_gpu: bool = True, parent: QWidget | None = None,
+        self,
+        use_gpu: bool = True,
+        parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._use_gpu = use_gpu
@@ -71,7 +72,8 @@ class PageSecurity(QWidget):
         )
         layout.addWidget(lbl)
         self._enc_btn_in = FilePathButton(
-            "Selecionar PDF  ", mode="pdf",
+            "Selecionar PDF  ",
+            mode="pdf",
         )
         layout.addWidget(self._enc_btn_in)
 
@@ -81,7 +83,8 @@ class PageSecurity(QWidget):
         )
         layout.addWidget(lbl_out)
         self._enc_btn_out = FilePathButton(
-            "Selecionar arquivo de saída (.pdf)  ", mode="save",
+            "Selecionar arquivo de saída (.pdf)  ",
+            mode="save",
         )
         layout.addWidget(self._enc_btn_out)
 
@@ -126,7 +129,8 @@ class PageSecurity(QWidget):
         btn.setObjectName("actionBtn")
         btn.setCursor(Qt.CursorShape.PointingHandCursor)
         btn.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Fixed,
         )
         btn.clicked.connect(self._encrypt)
         layout.addWidget(btn)
@@ -146,7 +150,8 @@ class PageSecurity(QWidget):
         )
         layout.addWidget(lbl)
         self._dec_btn_in = FilePathButton(
-            "Selecionar PDF  ", mode="pdf",
+            "Selecionar PDF  ",
+            mode="pdf",
         )
         layout.addWidget(self._dec_btn_in)
 
@@ -156,7 +161,8 @@ class PageSecurity(QWidget):
         )
         layout.addWidget(lbl_out)
         self._dec_btn_out = FilePathButton(
-            "Selecionar arquivo de saída (.pdf)  ", mode="save",
+            "Selecionar arquivo de saída (.pdf)  ",
+            mode="save",
         )
         layout.addWidget(self._dec_btn_out)
 
@@ -174,7 +180,8 @@ class PageSecurity(QWidget):
         btn.setObjectName("actionBtn")
         btn.setCursor(Qt.CursorShape.PointingHandCursor)
         btn.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Fixed,
         )
         btn.clicked.connect(self._decrypt)
         layout.addWidget(btn)
@@ -184,7 +191,9 @@ class PageSecurity(QWidget):
         return tab
 
     def refresh_state(
-        self, pdf_path: Path | None, output_dir: Path | None,
+        self,
+        pdf_path: Path | None,
+        output_dir: Path | None,
     ) -> None:
         if pdf_path:
             self._enc_btn_in.set_path(pdf_path)

@@ -1,5 +1,3 @@
-from pathlib import Path
-import fitz
 from core.pdf_reader import PDFReader
 
 

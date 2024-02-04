@@ -10,9 +10,9 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QSizePolicy,
-    QTabWidget,
     QTableWidget,
     QTableWidgetItem,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
@@ -20,8 +20,8 @@ from PyQt6.QtWidgets import (
 from core.font_detector import FontDetector
 from core.metadata import PDFMetadata
 from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
-from utils.file_utils import ensure_output_path
 from ui.styles import DraculaTheme
+from utils.file_utils import ensure_output_path
 
 logger = logging.getLogger("pdfforge.screens.analyzer")
 
@@ -208,9 +208,7 @@ class PageAnalyzer(QWidget):
 
         for key, value in display.items():
             lbl_key = QLabel(label_map.get(key, key) + ":")
-            lbl_key.setStyleSheet(
-                f"color: {DraculaTheme.PURPLE}; font-weight: bold;"
-            )
+            lbl_key.setStyleSheet(f"color: {DraculaTheme.PURPLE}; font-weight: bold;")
             lbl_val = QLabel(str(value))
             lbl_val.setWordWrap(True)
             lbl_val.setStyleSheet(f"color: {DraculaTheme.FOREGROUND};")

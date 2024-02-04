@@ -4,8 +4,6 @@ from pathlib import Path
 
 import fitz
 
-from utils.file_utils import ensure_output_path
-
 logger = logging.getLogger("pdfforge.editor")
 
 
@@ -48,7 +46,10 @@ class PDFEditor:
         doc.save(str(output_path), garbage=4, deflate=True)
         logger.info(
             "Multi-substituição: %d par(es), %d ocorrências em %d página(s) → %s",
-            len(pairs), total, len(pages_affected), output_path.name,
+            len(pairs),
+            total,
+            len(pages_affected),
+            output_path.name,
         )
         return ReplaceResult(
             total_replacements=total,
@@ -128,10 +129,12 @@ class PDFEditor:
                     span_text = span.get("text", "")
                     compare = span_text if case_sensitive else span_text.lower()
                     if search_lower in compare:
-                        results.append({
-                            "attrs": span,
-                            "origin": fitz.Point(span["origin"]),
-                        })
+                        results.append(
+                            {
+                                "attrs": span,
+                                "origin": fitz.Point(span["origin"]),
+                            }
+                        )
         return results
 
     _BUILTIN_FONTS = {"helv", "tiro", "cour", "symb", "zadb"}

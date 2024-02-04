@@ -1,17 +1,18 @@
-from pathlib import Path
-
 import fitz
 
 from core.pdf_page_organizer import PDFPageOrganizer
 
 
 def test_reorder_pages(
-    sample_multipage_path, tmp_output_dir,
+    sample_multipage_path,
+    tmp_output_dir,
 ):
     organizer = PDFPageOrganizer()
     output = tmp_output_dir / "reordered.pdf"
     result = organizer.reorder(
-        sample_multipage_path, output, [4, 3, 2, 1, 0],
+        sample_multipage_path,
+        output,
+        [4, 3, 2, 1, 0],
     )
     assert result.success
     assert result.total_pages == 5
@@ -23,36 +24,45 @@ def test_reorder_pages(
 
 
 def test_delete_page(
-    sample_multipage_path, tmp_output_dir,
+    sample_multipage_path,
+    tmp_output_dir,
 ):
     organizer = PDFPageOrganizer()
     output = tmp_output_dir / "deleted.pdf"
     result = organizer.delete_pages(
-        sample_multipage_path, output, [0, 2],
+        sample_multipage_path,
+        output,
+        [0, 2],
     )
     assert result.success
     assert result.total_pages == 3
 
 
 def test_duplicate_page(
-    sample_multipage_path, tmp_output_dir,
+    sample_multipage_path,
+    tmp_output_dir,
 ):
     organizer = PDFPageOrganizer()
     output = tmp_output_dir / "duplicated.pdf"
     result = organizer.duplicate_page(
-        sample_multipage_path, output, 0,
+        sample_multipage_path,
+        output,
+        0,
     )
     assert result.success
     assert result.total_pages == 6
 
 
 def test_reorder_invalid_index(
-    sample_multipage_path, tmp_output_dir,
+    sample_multipage_path,
+    tmp_output_dir,
 ):
     organizer = PDFPageOrganizer()
     output = tmp_output_dir / "invalid.pdf"
     result = organizer.reorder(
-        sample_multipage_path, output, [0, 1, 99],
+        sample_multipage_path,
+        output,
+        [0, 1, 99],
     )
     assert not result.success
     assert "invalido" in result.error.lower()

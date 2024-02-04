@@ -4,7 +4,6 @@ from pathlib import Path
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtWidgets import (
     QDoubleSpinBox,
-    QHBoxLayout,
     QLabel,
     QLineEdit,
     QProgressBar,
@@ -194,7 +193,9 @@ class PageSplit(QWidget):
         self._progress.setVisible(False)
         if result.success:
             names = ", ".join(f.name for f in result.output_files[:4])
-            extra = f" (+{len(result.output_files)-4} mais)" if len(result.output_files) > 4 else ""
+            extra = (
+                f" (+{len(result.output_files) - 4} mais)" if len(result.output_files) > 4 else ""
+            )
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.GREEN};")
             self._lbl_status.setText(f"{len(result.output_files)} arquivo(s): {names}{extra}")
             out_dir = self._btn_out.current_path

@@ -1,5 +1,5 @@
-from pathlib import Path
 import fitz
+
 from core.pdf_rotator import PDFRotator
 
 
