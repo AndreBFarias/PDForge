@@ -30,7 +30,7 @@ class PDFRotator:
                 output_path=output_path,
                 pages_rotated=0,
                 success=False,
-                error=f"Angulo invalido: {angle}. Use 90, 180 ou 270.",
+                error=f"Ângulo inválido: {angle}. Use 90, 180 ou 270.",
             )
         try:
             new_doc = fitz.open()
@@ -42,11 +42,11 @@ class PDFRotator:
             new_doc.save(str(output_path))
             new_doc.close()
             logger.info(
-                "Rotacionadas %d paginas (%d°) -> %s", len(page_indices), angle, output_path
+                "Rotacionadas %d páginas (%d°) -> %s", len(page_indices), angle, output_path
             )
             return RotateResult(output_path=output_path, pages_rotated=len(page_indices))
         except Exception as exc:
-            logger.error("Erro ao rotacionar paginas: %s", exc)
+            logger.error("Erro ao rotacionar páginas: %s", exc)
             return RotateResult(
                 output_path=output_path, pages_rotated=0, success=False, error=str(exc)
             )

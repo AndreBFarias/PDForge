@@ -16,7 +16,7 @@ class ReorderResult:
 
 
 class PDFPageOrganizer:
-    """Reorganizacao, duplicacao e exclusao de paginas em PDFs."""
+    """Reorganização, duplicação e exclusão de páginas em PDFs."""
 
     def reorder(
         self,
@@ -32,7 +32,7 @@ class PDFPageOrganizer:
                     doc.close()
                     return ReorderResult(
                         success=False,
-                        error=(f"Indice de pagina invalido: {idx}"),
+                        error=(f"Índice de página inválido: {idx}"),
                     )
             doc.select(new_order)
             output_path.parent.mkdir(
@@ -47,7 +47,7 @@ class PDFPageOrganizer:
             pages = len(doc)
             doc.close()
             logger.info(
-                "Paginas reordenadas: %d paginas -> %s",
+                "Páginas reordenadas: %d páginas -> %s",
                 pages,
                 output_path.name,
             )
@@ -76,7 +76,7 @@ class PDFPageOrganizer:
                 doc.close()
                 return ReorderResult(
                     success=False,
-                    error=("Nao e possivel deletar todas as paginas"),
+                    error=("Não é possível deletar todas as páginas"),
                 )
             doc.select(keep)
             output_path.parent.mkdir(
@@ -91,7 +91,7 @@ class PDFPageOrganizer:
             pages = len(doc)
             doc.close()
             logger.info(
-                "Paginas deletadas: %d removidas, %d restantes",
+                "Páginas deletadas: %d removidas, %d restantes",
                 len(pages_to_delete),
                 pages,
             )
@@ -101,7 +101,7 @@ class PDFPageOrganizer:
             )
         except Exception as exc:
             logger.error(
-                "Erro ao deletar paginas: %s",
+                "Erro ao deletar páginas: %s",
                 exc,
             )
             return ReorderResult(
@@ -121,7 +121,7 @@ class PDFPageOrganizer:
                 doc.close()
                 return ReorderResult(
                     success=False,
-                    error=(f"Indice de pagina invalido: {page_index}"),
+                    error=(f"Índice de página inválido: {page_index}"),
                 )
             order = list(range(len(doc)))
             order.insert(page_index + 1, page_index)
@@ -138,7 +138,7 @@ class PDFPageOrganizer:
             pages = len(doc)
             doc.close()
             logger.info(
-                "Pagina %d duplicada: %d paginas total",
+                "Página %d duplicada: %d páginas total",
                 page_index,
                 pages,
             )

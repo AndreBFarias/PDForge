@@ -16,7 +16,7 @@ class ConvertResult:
 
 
 class PDFImageConverter:
-    """Conversao bidirecional entre PDF e imagens."""
+    """Conversão bidirecional entre PDF e imagens."""
 
     def pdf_to_images(
         self,
@@ -60,7 +60,7 @@ class PDFImageConverter:
             )
         except Exception as exc:
             logger.error(
-                "Erro na conversao PDF->imagens: %s",
+                "Erro na conversão PDF->imagens: %s",
                 exc,
             )
             result.success = False
@@ -110,7 +110,7 @@ class PDFImageConverter:
             )
         except Exception as exc:
             logger.error(
-                "Erro na conversao imagens->PDF: %s",
+                "Erro na conversão imagens->PDF: %s",
                 exc,
             )
             result.success = False

@@ -50,7 +50,7 @@ class PDFMerger:
                     logger.debug("Mesclado: %s (%d pags)", entry.path.name, src.page_count)
 
             output.save(str(output_path))
-            logger.info("Merge concluido: %d paginas em %s", output.page_count, output_path)
+            logger.info("Merge concluído: %d páginas em %s", output.page_count, output_path)
             return MergeResult(
                 output_path=output_path,
                 total_pages=output.page_count,

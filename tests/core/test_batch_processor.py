@@ -45,7 +45,7 @@ def test_batch_empty_list(tmp_output_dir):
 
 def test_batch_invalid_file(tmp_output_dir):
     fake_pdf = tmp_output_dir / "fake.pdf"
-    fake_pdf.write_text("nao e um pdf")
+    fake_pdf.write_text("não é um pdf")
     output_dir = tmp_output_dir / "batch_invalid"
     processor = BatchProcessor(output_dir=output_dir)
     report = processor.run(

@@ -195,9 +195,9 @@ class PageOrganizer(QWidget):
         self._page_order.clear()
 
         while self._grid_layout.count():
-            item = self._grid_layout.takeAt(0)
-            if item.widget():
-                item.widget().deleteLater()
+            layout_item = self._grid_layout.takeAt(0)
+            if layout_item is not None and layout_item.widget():
+                layout_item.widget().deleteLater()  # type: ignore[union-attr]
 
         try:
             from core.pdf_page_organizer import PDFPageOrganizer
@@ -207,12 +207,12 @@ class PageOrganizer(QWidget):
 
             cols = 4
             for i, png_bytes in enumerate(thumbs):
-                item = _ThumbnailItem(i, png_bytes)
-                self._thumbnails.append(item)
+                thumb_item = _ThumbnailItem(i, png_bytes)
+                self._thumbnails.append(thumb_item)
                 self._page_order.append(i)
                 row = i // cols
                 col = i % cols
-                self._grid_layout.addWidget(item, row, col)
+                self._grid_layout.addWidget(thumb_item, row, col)
 
             self._lbl_status.setText(
                 f"{len(thumbs)} páginas carregadas.",
@@ -226,9 +226,9 @@ class PageOrganizer(QWidget):
 
     def _refresh_grid(self) -> None:
         while self._grid_layout.count():
-            item = self._grid_layout.takeAt(0)
-            if item.widget():
-                item.widget().setParent(None)
+            layout_item = self._grid_layout.takeAt(0)
+            if layout_item is not None and layout_item.widget():
+                layout_item.widget().setParent(None)  # type: ignore[union-attr]
         cols = 4
         for i, thumb in enumerate(self._thumbnails):
             row = i // cols

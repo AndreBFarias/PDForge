@@ -1,25 +1,25 @@
-# Sprint 15 — Correcoes de Packaging + Workflow CI/CD
+# Sprint 15 — Correções de Packaging + Workflow CI/CD
 
-## Visao Estrategica
+## Visão Estratégica
 
-Sprint final que prepara o projeto para distribuicao. Corrige fragilidades nos scripts de empacotamento e implementa pipeline CI/CD completa com validacao de artefatos.
+Sprint final que prepara o projeto para distribuição. Corrige fragilidades nos scripts de empacotamento e implementa pipeline CI/CD completa com validação de artefatos.
 
-**Dependencias:** Sprints 11-14 (todas as features prontas)
-**Impacto:** Habilita distribuicao confiavel do software
+**Dependências:** Sprints 11-14 (todas as features prontas)
+**Impacto:** Habilita distribuição confiável do software
 **Estimativa:** ~350 LOC modificadas, 0 arquivos novos, 7 arquivos modificados
 
-**Pre-requisito do usuario:** `gh auth refresh -h github.com -s workflow` para push de workflows.
+**Pré-requisito do usuário:** `gh auth refresh -h github.com -s workflow` para push de workflows.
 
 ## Contexto Tecnico
 
 ### Problemas identificados na auditoria
-1. build-deb.sh: wrapper depende de venv que pode nao existir
+1. build-deb.sh: wrapper depende de venv que pode não existir
 2. build-appimage.sh: copia venv com `|| true`, downloads sem cache
-3. build-flatpak.sh: sem verificacao de pre-requisitos
-4. set-version.sh: sem validacao semver
-5. release.yml: sem Flatpak, sem validacao de artefatos, sem testes pre-build
+3. build-flatpak.sh: sem verificação de pré-requisitos
+4. set-version.sh: sem validação semver
+5. release.yml: sem Flatpak, sem validação de artefatos, sem testes pre-build
 6. ci.yml: falta Python 3.12 na matrix
-7. requirements.txt: deps opcionais nao documentadas
+7. requirements.txt: deps opcionais não documentadas
 
 ## Tasks
 
@@ -28,36 +28,36 @@ Sprint final que prepara o projeto para distribuicao. Corrige fragilidades nos s
 Melhorias:
 1. Wrapper com fallback: tenta venv primeiro, depois python3 do sistema
 2. Validar que rsync copiou arquivos essenciais
-3. Verificar que .desktop entry esta correto
-4. Adicionar `dpkg-deb --build` com verificacao de saida
+3. Verificar que .desktop entry está correto
+4. Adicionar `dpkg-deb --build` com verificação de saída
 
 ### Task 15.2 — Corrigir packaging/appimage/build-appimage.sh
 
 Melhorias:
 1. Usar `pip install --target` em vez de copiar venv
-2. Cachear appimagetool (verificar se ja existe antes de baixar)
+2. Cachear appimagetool (verificar se já existe antes de baixar)
 3. Remover `|| true` e tratar erros explicitamente
-4. Adicionar verificacao SHA256 do appimagetool
+4. Adicionar verificação SHA256 do appimagetool
 
 ### Task 15.3 — Corrigir packaging/build-flatpak.sh
 
 Melhorias:
-1. Verificar pre-requisitos (flatpak-builder, flatpak)
+1. Verificar pré-requisitos (flatpak-builder, flatpak)
 2. Adicionar tratamento de erros
-3. Verificar que manifesto YAML e valido
+3. Verificar que manifesto YAML é válido
 
 ### Task 15.4 — Corrigir packaging/set-version.sh
 
 Melhorias:
 1. Validar formato semver (X.Y.Z)
 2. Verificar que todos os arquivos-alvo existem
-3. Reportar alteracoes feitas
+3. Reportar alterações feitas
 
 ### Task 15.5 — Atualizar requirements.txt
 
-Adicionar secao de dependencias opcionais com comentarios:
+Adicionar seção de dependências opcionais com comentários:
 ```
-# Opcionais (OCR avancado e classificacao)
+# Opcionais (OCR avançado e classificação)
 # opencv-python-headless>=4.8.0
 # joblib>=1.3.0
 ```
@@ -95,7 +95,7 @@ YAML completo com:
    - Cria GitHub Release via `softprops/action-gh-release@v2`
    - Attach .deb, .AppImage, .flatpak como assets
 
-## Verificacao
+## Verificação
 
 ```bash
 # Testes
@@ -116,5 +116,5 @@ bash packaging/build-flatpak.sh
 ## Commit
 
 ```
-chore: corrige packaging e reescreve workflow CI/CD com validacao de artefatos
+chore: corrige packaging e reescreve workflow CI/CD com validação de artefatos
 ```

@@ -27,7 +27,7 @@ class PageClassifier(QWidget):
     def __init__(self, use_gpu: bool = True, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._use_gpu = use_gpu
-        self._worker: ClassifyWorker | None = None
+        self._worker: ClassifyWorker | ClassifyBatchWorker | None = None
         self._setup_ui()
 
     def _setup_ui(self) -> None:
@@ -67,10 +67,12 @@ class PageClassifier(QWidget):
 
         self._table = QTableWidget(0, 4)
         self._table.setHorizontalHeaderLabels(["Arquivo", "Tipo", "Confiança", "Método"])
-        self._table.horizontalHeader().setStretchLastSection(True)
+        if hh := self._table.horizontalHeader():
+            hh.setStretchLastSection(True)
         self._table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self._table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
-        self._table.verticalHeader().setVisible(False)
+        if vh := self._table.verticalHeader():
+            vh.setVisible(False)
         self._table.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         layout.addWidget(self._table)
 

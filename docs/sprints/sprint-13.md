@@ -1,24 +1,24 @@
 # Sprint 13 — Marca d'Agua (Texto e Imagem)
 
-## Visao Estrategica
+## Visão Estratégica
 
-Marca d'agua e essencial para protecao de propriedade intelectual e identificacao de documentos confidenciais. A implementacao suporta tanto texto (ex: "CONFIDENCIAL", "RASCUNHO") quanto imagem (ex: logo da empresa).
+Marca d'água é essencial para proteção de propriedade intelectual e identificação de documentos confidenciais. A implementação suporta tanto texto (ex: "CONFIDENCIAL", "RASCUNHO") quanto imagem (ex: logo da empresa).
 
-**Dependencias:** Sprint 10 (base estavel)
+**Dependências:** Sprint 10 (base estável)
 **Impacto:** Feature de alta demanda corporativa
 **Estimativa:** ~480 LOC novas, 3 arquivos novos, 3 arquivos modificados
 
-## Contexto Tecnico
+## Contexto Técnico
 
 ### Abordagem para opacidade
-PyMuPDF nao suporta opacidade direta em `insert_text()`. A abordagem recomendada:
-1. **Texto:** Gerar PNG semi-transparente via Pillow em memoria, inserir com `insert_image()`
+PyMuPDF não suporta opacidade direta em `insert_text()`. A abordagem recomendada:
+1. **Texto:** Gerar PNG semi-transparente via Pillow em memória, inserir com `insert_image()`
 2. **Imagem:** Usar Pillow para ajustar opacidade da imagem, inserir com `insert_image()`
 3. Alternativa: usar `page.insert_htmlbox()` com CSS opacity (PyMuPDF 1.23+)
 
-### Rotacao
+### Rotação
 - `fitz.Matrix` com `prerotate()` para texto rotacionado
-- Posicoes: centro, diagonal, canto superior/inferior, repeticao em grade
+- Posições: centro, diagonal, canto superior/inferior, repetição em grade
 
 ## Tasks
 
@@ -56,18 +56,18 @@ Layout com QTabWidget:
   - FilePathButton (PDF)
   - QLineEdit para texto da marca
   - QSpinBox font_size (12-200, default 48)
-  - QComboBox posicao (Centro, Diagonal, Repeticao)
+  - QComboBox posição (Centro, Diagonal, Repetição)
   - QSlider opacidade (0-100%, default 30%)
-  - QSpinBox rotacao (-180 a 180, default -45)
+  - QSpinBox rotação (-180 a 180, default -45)
   - QPushButton cor (abre QColorDialog)
-  - Botao "Aplicar"
+  - Botão "Aplicar"
 - Aba "Imagem":
   - FilePathButton (PDF)
   - FilePathButton (imagem, mode="image")
-  - QComboBox posicao
+  - QComboBox posição
   - QSlider opacidade
   - QDoubleSpinBox escala (0.1-3.0, default 1.0)
-  - Botao "Aplicar"
+  - Botão "Aplicar"
 - QProgressBar compartilhada
 
 ### Task 13.3 — Criar tests/core/test_pdf_watermark.py (~80 LOC)
@@ -75,8 +75,8 @@ Layout com QTabWidget:
 Testes:
 1. `test_apply_text_watermark` — aplica texto e verifica que PDF foi gerado
 2. `test_apply_image_watermark` — aplica imagem e verifica
-3. `test_watermark_diagonal` — posicao diagonal
-4. `test_watermark_tile` — repeticao em grade
+3. `test_watermark_diagonal` — posição diagonal
+4. `test_watermark_tile` — repetição em grade
 5. `test_watermark_opacity` — opacidade aplicada corretamente
 
 ### Task 13.4 — Adicionar WatermarkWorker em ui/workers.py
@@ -85,10 +85,10 @@ Dois modos: texto e imagem. Config passada no construtor.
 
 ### Task 13.5 — Integrar na sidebar em ui/main_window.py
 
-- Adicionar "Marca d'Agua" na sidebar
-- Criar instancia de PageWatermark no `_setup_content()`
+- Adicionar "Marca d'Água" na sidebar
+- Criar instância de PageWatermark no `_setup_content()`
 
-## Verificacao
+## Verificação
 
 ```bash
 QT_QPA_PLATFORM=offscreen python3 -m pytest tests/ -v --tb=short

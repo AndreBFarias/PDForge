@@ -99,11 +99,13 @@ class PageAnalyzer(QWidget):
         self._font_table.setHorizontalHeaderLabels(
             ["Fonte", "Ocorrências", "Páginas", "Tamanho médio (pt)"]
         )
-        self._font_table.horizontalHeader().setStretchLastSection(True)
+        if hh := self._font_table.horizontalHeader():
+            hh.setStretchLastSection(True)
         self._font_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self._font_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
-        self._font_table.verticalHeader().setDefaultSectionSize(36)
-        self._font_table.verticalHeader().setVisible(False)
+        if vh := self._font_table.verticalHeader():
+            vh.setDefaultSectionSize(36)
+            vh.setVisible(False)
         vbox.addWidget(self._font_table)
 
         self._tabs.addTab(container, "Fontes")

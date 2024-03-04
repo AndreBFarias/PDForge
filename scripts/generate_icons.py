@@ -16,7 +16,7 @@ ICONS_DIR = BASE_DIR / "assets" / "icons"
 
 def generate() -> None:
     if not SOURCE.exists():
-        logger.error("Asset nao encontrado: %s", SOURCE)
+        logger.error("Asset não encontrado: %s", SOURCE)
         return
 
     ICONS_DIR.mkdir(parents=True, exist_ok=True)

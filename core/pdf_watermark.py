@@ -188,6 +188,7 @@ class PDFWatermark:
             (0, 0, 0, 0),
         )
         draw = ImageDraw.Draw(img)
+        font: ImageFont.ImageFont | ImageFont.FreeTypeFont
         try:
             font = ImageFont.truetype(
                 "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
@@ -218,7 +219,7 @@ class PDFWatermark:
             rotated = txt_img.rotate(
                 -config.rotation,
                 expand=True,
-                resample=Image.BICUBIC,
+                resample=Image.BICUBIC,  # type: ignore[attr-defined]
             )
             rx = (width - rotated.width) // 2
             ry = (height - rotated.height) // 2
@@ -249,6 +250,7 @@ class PDFWatermark:
             (0, 0, 0, 0),
         )
         draw = ImageDraw.Draw(img)
+        font: ImageFont.ImageFont | ImageFont.FreeTypeFont
         try:
             font = ImageFont.truetype(
                 "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
@@ -285,7 +287,7 @@ class PDFWatermark:
                     txt_img = txt_img.rotate(
                         -config.rotation,
                         expand=True,
-                        resample=Image.BICUBIC,
+                        resample=Image.BICUBIC,  # type: ignore[attr-defined]
                     )
                 img.paste(txt_img, (x, y), txt_img)
 
@@ -308,7 +310,7 @@ class PDFWatermark:
         new_h = int(wm_img.height * scale)
         wm_img = wm_img.resize(
             (new_w, new_h),
-            Image.LANCZOS,
+            Image.LANCZOS,  # type: ignore[attr-defined]
         )
 
         alpha = wm_img.split()[3]

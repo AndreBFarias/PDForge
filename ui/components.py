@@ -47,8 +47,10 @@ class Toast(QWidget):
     def show_message(self, message: str, duration_ms: int = 3000) -> None:
         self.label.setText(message)
         self.adjustSize()
-        if self.parent():
-            rect = self.parent().rect()
+        parent = self.parent()
+        if parent is not None:
+            assert hasattr(parent, "rect")
+            rect = parent.rect()  # type: ignore[union-attr]
             self.move(
                 rect.width() - self.width() - 20,
                 rect.height() - self.height() - 80,
@@ -98,8 +100,9 @@ class FilePathButton(QPushButton):
         else:
             self.setText(self._default_label)
             self.setProperty("hasPath", False)
-        self.style().unpolish(self)
-        self.style().polish(self)
+        if style := self.style():
+            style.unpolish(self)
+            style.polish(self)
 
     def _open_dialog(self) -> None:
         if self._mode == "pdf":

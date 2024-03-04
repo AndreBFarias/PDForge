@@ -99,11 +99,13 @@ class PageBatch(QWidget):
 
         self._table = QTableWidget(0, 4)
         self._table.setHorizontalHeaderLabels(["Arquivo", "Status", "Duração (s)", "Mensagem"])
-        self._table.horizontalHeader().setStretchLastSection(True)
+        if hh := self._table.horizontalHeader():
+            hh.setStretchLastSection(True)
         self._table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self._table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
-        self._table.verticalHeader().setDefaultSectionSize(36)
-        self._table.verticalHeader().setVisible(False)
+        if vh := self._table.verticalHeader():
+            vh.setDefaultSectionSize(36)
+            vh.setVisible(False)
         self._table.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         layout.addWidget(self._table)
 

@@ -17,7 +17,7 @@ def sample_pdf_path(tmp_path_factory) -> Path:
     page.insert_text((50, 100), "Documento de teste PDForge.", fontsize=12)
     doc.save(str(path))
     doc.close()
-    return path
+    return path  # type: ignore[no-any-return]
 
 
 @pytest.fixture(scope="session")
@@ -29,7 +29,7 @@ def sample_multipage_path(tmp_path_factory) -> Path:
         page.insert_text((50, 100), f"Pagina {i + 1} do documento de teste.", fontsize=12)
     doc.save(str(path))
     doc.close()
-    return path
+    return path  # type: ignore[no-any-return]
 
 
 @pytest.fixture(scope="session")

@@ -91,7 +91,7 @@ class PDFMerger:
                     logger.debug("Mesclado: %s (%d pags)", entry.path.name, src.page_count)
 
             output.save(str(output_path))
-            logger.info("Merge concluido: %d paginas em %s", output.page_count, output_path)
+            logger.info("Merge concluído: %d páginas em %s", output.page_count, output_path)
             return MergeResult(
                 output_path=output_path,
                 total_pages=output.page_count,
@@ -156,7 +156,7 @@ class PDFSplitter:
                 new_doc.save(str(out_path))
                 new_doc.close()
                 result.output_files.append(out_path)
-                logger.debug("Split parte %d: paginas %d-%d -> %s", i + 1, start, end, out_path)
+                logger.debug("Split parte %d: páginas %d-%d -> %s", i + 1, start, end, out_path)
         except Exception as exc:
             logger.error("Erro no split por range: %s", exc)
             result.success = False
@@ -308,11 +308,11 @@ class PDFRotator:
             new_doc.save(str(output_path))
             new_doc.close()
             logger.info(
-                "Rotacionadas %d paginas (%d°) -> %s", len(page_indices), angle, output_path
+                "Rotacionadas %d páginas (%d°) -> %s", len(page_indices), angle, output_path
             )
             return RotateResult(output_path=output_path, pages_rotated=len(page_indices))
         except Exception as exc:
-            logger.error("Erro ao rotacionar paginas: %s", exc)
+            logger.error("Erro ao rotacionar páginas: %s", exc)
             return RotateResult(
                 output_path=output_path, pages_rotated=0, success=False, error=str(exc)
             )
