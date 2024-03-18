@@ -1,0 +1,22 @@
+# PDForge — dependências para Flatpak (sem torch/easyocr)
+# torch e easyocr excluídos para manter o pacote em tamanho razoável
+# Para habilitar OCR: pip install torch easyocr
+
+# Core PDF
+pymupdf==1.27.1
+
+# GUI
+PyQt6>=6.6.0
+
+# CLI
+click==8.1.7
+
+# Utilitários
+pillow==10.4.0
+numpy>=1.26.0
+
+# Exportação DOCX
+pdf2docx>=0.5.6
+
+# Monitoramento GPU (opcional)
+gputil==1.4.0

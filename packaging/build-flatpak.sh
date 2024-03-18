@@ -29,9 +29,9 @@ fi
 
 rm -rf "$BUILD_DIR"
 
-flatpak-builder --force-clean "$BUILD_DIR" "$MANIFEST"
+flatpak-builder --disable-sandbox --disable-rofiles-fuse --force-clean "$BUILD_DIR" "$MANIFEST"
 
-flatpak-builder --repo="$REPO_DIR" --force-clean "$BUILD_DIR" "$MANIFEST"
+flatpak-builder --disable-sandbox --disable-rofiles-fuse --repo="$REPO_DIR" --force-clean "$BUILD_DIR" "$MANIFEST"
 
 flatpak build-bundle "$REPO_DIR" "$SCRIPT_DIR/pdfforge.flatpak" "$APP_ID"
 
