@@ -1,7 +1,7 @@
 <div align="center">
 
 [![opensource](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](#)
-[![Licenca](https://img.shields.io/badge/licenca-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Licença](https://img.shields.io/badge/licença-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python](https://img.shields.io/badge/python-3.10+-green.svg)](https://www.python.org/)
 [![PyQt6](https://img.shields.io/badge/PyQt6-6.x-green.svg)](https://www.riverbankcomputing.com/software/pyqt/)
 [![Estrelas](https://img.shields.io/github/stars/AndreBFarias/PDForge.svg?style=social)](https://github.com/AndreBFarias/PDForge/stargazers)
@@ -157,6 +157,6 @@ bash uninstall.sh
 
 ---
 
-### Licenca
+### Licença
 
 GPLv3 - Veja [LICENSE](LICENSE) para detalhes.
