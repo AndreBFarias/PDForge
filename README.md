@@ -135,11 +135,11 @@ PDForge/
 
 ---
 
-### Documentacao
+### Documentação
 
-- [Referencia do Projeto](DEVGUIDE.md)
+- [Referência do Projeto](DEVGUIDE.md)
 - [Arquitetura](docs/plans/architecture_v1.md)
-- [Guia de Instalacao](docs/guides/installation.md)
+- [Guia de Instalação](docs/guides/installation.md)
 
 ---
 
