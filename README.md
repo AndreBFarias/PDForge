@@ -17,7 +17,7 @@
 
 ### Descrição
 
-Editor e manipulador de PDF para Linux com interface PyQt6, tema Dracula, OCR com aceleracao GPU (CUDA), classificacao de documentos por ML e processamento em lote.
+Editor e manipulador de PDF para Linux com interface PyQt6, tema Dracula, OCR com aceleração GPU (CUDA), classificação de documentos por ML e processamento em lote.
 
 ---
 
