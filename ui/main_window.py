@@ -32,15 +32,15 @@ from ui.widgets.pdf_page_viewer import PDFPageViewer
 logger = logging.getLogger("pdfforge.main_window")
 
 _SIDEBAR_ITEMS = [
-    "Editor",
-    "Analisador",
-    "OCR",
-    "Mesclar",
-    "Dividir",
-    "Comprimir",
-    "Assinaturas",
-    "Classificar",
-    "Lote",
+    ("✎", "Editor"),
+    ("◎", "Analisador"),
+    ("≡", "OCR"),
+    ("⊕", "Mesclar"),
+    ("⊘", "Dividir"),
+    ("⇩", "Comprimir"),
+    ("✍", "Assinaturas"),
+    ("◈", "Classificar"),
+    ("☰", "Lote"),
 ]
 
 
@@ -121,15 +121,15 @@ class MainWindow(QMainWindow):
 
         self._sidebar = QListWidget()
         self._sidebar.setStyleSheet(
-            f"font-size: 15px; font-weight: 600;"
+            f"font-size: 14px; font-weight: 600;"
             f" background-color: {DraculaTheme.SIDEBAR};"
         )
         self._sidebar.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self._sidebar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        self._sidebar.setFixedHeight(len(_SIDEBAR_ITEMS) * 54)
+        self._sidebar.setFixedHeight(len(_SIDEBAR_ITEMS) * 50)
 
-        for name in _SIDEBAR_ITEMS:
-            item = QListWidgetItem(f"  {name}")
+        for icon, name in _SIDEBAR_ITEMS:
+            item = QListWidgetItem(f"  {icon}   {name}")
             self._sidebar.addItem(item)
 
         self._sidebar.currentRowChanged.connect(self._change_page)

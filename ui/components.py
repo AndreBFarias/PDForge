@@ -59,7 +59,7 @@ class Toast(QWidget):
 
 class FilePathButton(QPushButton):
     """
-    QPushButton que abre um diálogo nativo ao clicar e exibe o caminho selecionado.
+    QPushButton com estilo de drop zone que abre diálogo nativo ao clicar.
 
     mode="pdf"  → QFileDialog.getOpenFileName filtrado por PDF
     mode="dir"  → QFileDialog.getExistingDirectory
@@ -77,6 +77,8 @@ class FilePathButton(QPushButton):
         self._mode = mode
         self._path: Path | None = None
         self._default_label = label
+        self.setObjectName("fileBtn")
+        self.setProperty("hasPath", False)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.clicked.connect(self._open_dialog)
 
@@ -91,8 +93,12 @@ class FilePathButton(QPushButton):
             if len(display) > 46:
                 display = "..." + display[-43:]
             self.setText(display)
+            self.setProperty("hasPath", True)
         else:
             self.setText(self._default_label)
+            self.setProperty("hasPath", False)
+        self.style().unpolish(self)
+        self.style().polish(self)
 
     def _open_dialog(self) -> None:
         if self._mode == "pdf":
@@ -116,7 +122,7 @@ class FilePathButton(QPushButton):
 
 
 class SectionHeader(QLabel):
-    """Cabeçalho de seção com estilo Dracula (texto branco + destaque roxo)."""
+    """Cabeçalho de seção com título bicolor e separador inferior sutil."""
 
     def __init__(self, white: str, purple: str = "", parent: QWidget | None = None) -> None:
         rich = (
@@ -127,8 +133,12 @@ class SectionHeader(QLabel):
         )
         super().__init__(rich, parent)
         self.setStyleSheet(
-            "font-size: 26px; font-weight: bold; margin-bottom: 10px;"
-            f" background-color: transparent; color: {DraculaTheme.FOREGROUND};"
+            "font-size: 24px; font-weight: 700;"
+            " background-color: transparent;"
+            f" color: {DraculaTheme.FOREGROUND};"
+            f" border-bottom: 1px solid rgba(189, 147, 249, 0.2);"
+            " padding-bottom: 10px;"
+            " margin-bottom: 6px;"
         )
 
 
