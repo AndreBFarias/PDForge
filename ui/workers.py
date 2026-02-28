@@ -160,6 +160,16 @@ class BatchWorker(QThread):
 
             return _ocr_op
 
+        if self._operation_name.startswith("rotate_"):
+            angle = int(self._operation_name.split("_")[1])
+
+            def _rotate_op(doc: fitz.Document, output_path: Path) -> str:
+                from core.pdf_rotator import PDFRotator
+                result = PDFRotator().rotate_all(doc, angle, output_path)
+                return f"{result.pages_rotated} paginas rotacionadas {angle}°"
+
+            return _rotate_op
+
         def _meta_op(doc: fitz.Document, output_path: Path) -> str:
             meta = PDFMetadata().read(doc)
             title = meta.title[:40] if meta.title else "(sem título)"
