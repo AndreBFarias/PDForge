@@ -6,7 +6,7 @@ from typing import Callable
 
 import fitz
 
-logger = logging.getLogger("pdfforge")
+logger = logging.getLogger("pdfforge.splitter")
 
 
 @dataclass

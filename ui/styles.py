@@ -125,11 +125,54 @@ class DraculaTheme:
         background-color: {RED};
         color: {FOREGROUND};
         font-size: 14px;
+        font-weight: 600;
+        border-radius: {BORDER_RADIUS};
+        min-height: 40px;
+    }}
+    QPushButton#dangerBtn:hover {{
+        background-color: rgba(255, 85, 85, 0.1);
+        border-color: {RED};
+    }}
+    QPushButton#dangerBtn:pressed {{
+        background-color: rgba(255, 85, 85, 0.18);
+    }}
+
+    /* ─── Navigation / compact buttons ─── */
+    QPushButton#navBtn {{
+        background-color: transparent;
+        color: {COMMENT};
+        border: 1px solid rgba(68, 71, 90, 0.6);
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        min-height: 28px;
+        max-height: 28px;
+        padding: 0 8px;
+    }}
+    QPushButton#navBtn:hover {{
+        background-color: rgba(68, 71, 90, 0.5);
+        color: {FOREGROUND};
+        border-color: rgba(189, 147, 249, 0.4);
+    }}
+    QPushButton#navBtn:pressed {{
+        background-color: rgba(68, 71, 90, 0.8);
+    }}
+    QPushButton#navBtn:disabled {{
+        color: rgba(98, 114, 164, 0.3);
+        border-color: rgba(68, 71, 90, 0.3);
+    }}
+
+    /* ─── File picker / drop zone ─── */
+    QPushButton#fileBtn {{
+        background-color: rgba(33, 34, 44, 0.6);
+        color: {COMMENT};
+        border: 1px dashed rgba(98, 114, 164, 0.55);
         border-radius: {BORDER_RADIUS};
         min-height: 44px;
     }}
-    QPushButton#dangerBtn:hover {{
-        background-color: #ff7777;
+    QPushButton#fileBtn:hover {{
+        border-color: {PURPLE};
+        background-color: rgba(33, 34, 44, 0.9);
     }}
 
     QComboBox {{
@@ -206,13 +249,23 @@ class DraculaTheme:
     QTableWidget {{
         background-color: {BACKGROUND};
         color: {FOREGROUND};
-        border: none;
-        gridline-color: {CURRENT_LINE};
-        selection-background-color: {CURRENT_LINE};
+        border: 1px solid {CURRENT_LINE};
+        border-radius: {BORDER_RADIUS};
+        gridline-color: rgba(68, 71, 90, 0.6);
+        selection-background-color: rgba(68, 71, 90, 0.8);
+        outline: none;
+    }}
+    QTableWidget::item {{
+        padding: 6px 8px;
     }}
     QTableWidget::item:selected {{
         background-color: {CURRENT_LINE};
         color: {PURPLE};
+    }}
+    QTableWidget QLineEdit {{
+        border-radius: 2px;
+        padding: 2px 6px;
+        min-height: 0px;
     }}
     QHeaderView::section {{
         background-color: {SIDEBAR};

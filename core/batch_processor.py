@@ -125,3 +125,6 @@ class BatchProcessor:
                 duration_s=time.monotonic() - start,
                 message=str(exc),
             )
+
+
+# "A repetição é a mãe da habilidade." — Tony Robbins

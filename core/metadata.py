@@ -74,3 +74,6 @@ class PDFMetadata:
         empty = Metadata()
         self.write(doc, empty, output_path)
         logger.info("Metadados removidos: %s", output_path.name)
+
+
+# "Os dados são o novo petróleo." — Clive Humby

@@ -5,7 +5,7 @@ from typing import Callable
 
 import fitz
 
-logger = logging.getLogger("pdfforge")
+logger = logging.getLogger("pdfforge.merger")
 
 
 @dataclass
@@ -69,4 +69,4 @@ class PDFMerger:
             output.close()
 
 
-# "A uniao faz a forca." — Provérbio latino
+# "A união faz a força." — Provérbio latino

@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from dataclasses import dataclass, field, asdict
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("pdfforge.settings")
 
 # Paleta Dracula — usada tanto no CSS Textual quanto em Rich markup
 DRACULA = {
@@ -40,8 +40,8 @@ LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 LOG_BACKUP_COUNT = 7          # Manter 7 dias de logs
 
-APP_VERSION = "0.1.0"
-APP_NAME = "PDFForge"
+APP_VERSION = "1.0.0"
+APP_NAME = "PDForge"
 
 
 @dataclass
@@ -112,3 +112,6 @@ class Settings:
     # --- Assinaturas ---
     SIGNATURE_EXTRACT_SCALE: float = 3.0
     SIGNATURE_TEMP_DIR: Path = Path.home() / ".pdfforge" / "tmp" / "signatures"
+
+
+# "A ordem é a primeira lei do céu." — Alexander Pope

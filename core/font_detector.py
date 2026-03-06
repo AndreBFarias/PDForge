@@ -1,5 +1,4 @@
 import logging
-from collections import Counter
 from dataclasses import dataclass
 
 import fitz
@@ -82,6 +81,9 @@ class FontDetector:
         result.sort(key=lambda u: u.occurrences, reverse=True)
         logger.info("Fontes detectadas: %d tipos únicos", len(result))
         return result
+
+
+# "A tipografia é a voz da escrita." — Robert Bringhurst
 
     def get_dominant_font(self, doc: fitz.Document) -> FontUsage | None:
         """Retorna a fonte mais usada no documento."""
