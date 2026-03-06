@@ -71,13 +71,13 @@ class PageSignature(QWidget):
         lbl_img = QLabel("Imagem para reinserção (PNG/JPG)")
         lbl_img.setStyleSheet(f"color: {DraculaTheme.COMMENT}; font-weight: bold;")
         layout.addWidget(lbl_img)
-        self._btn_img = FilePathButton("Selecionar imagem  ", mode="pdf")
+        self._btn_img = FilePathButton("Selecionar imagem  ", mode="image")
         layout.addWidget(self._btn_img)
 
         lbl_out = QLabel("PDF de saída")
         lbl_out.setStyleSheet(f"color: {DraculaTheme.COMMENT}; font-weight: bold;")
         layout.addWidget(lbl_out)
-        self._btn_out = FilePathButton("Selecionar arquivo de saída (.pdf)  ", mode="pdf")
+        self._btn_out = FilePathButton("Selecionar arquivo de saída (.pdf)  ", mode="save")
         layout.addWidget(self._btn_out)
 
         self._lbl_status = QLabel("Pronto.")

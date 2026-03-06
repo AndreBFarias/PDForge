@@ -79,6 +79,7 @@ class PageEditor(QWidget):
             | QAbstractItemView.EditTrigger.SelectedClicked
         )
         self._pairs_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self._pairs_table.verticalHeader().setDefaultSectionSize(36)
         self._pairs_table.verticalHeader().setVisible(False)
         self._pairs_table.setMinimumHeight(120)
         layout.addWidget(self._pairs_table)
@@ -87,7 +88,7 @@ class PageEditor(QWidget):
         table_btn_row = QHBoxLayout()
         table_btn_row.setSpacing(8)
 
-        self._btn_add_pair = QPushButton("+ Par")
+        self._btn_add_pair = QPushButton("+ Adicionar")
         self._btn_add_pair.setObjectName("secondaryBtn")
         self._btn_add_pair.setCursor(Qt.CursorShape.PointingHandCursor)
         self._btn_add_pair.clicked.connect(self._add_pair_row)
@@ -225,6 +226,7 @@ class PageEditor(QWidget):
         if self._docx_worker and self._docx_worker.isRunning():
             return
 
+        out_dir.mkdir(parents=True, exist_ok=True)
         output_path = out_dir / (pdf.stem + ".docx")
         self._btn_export.setEnabled(False)
         self._btn_export.setText("Exportando...")

@@ -6,11 +6,14 @@ requires-python = ">=3.10"
 license = {text = "GPL-3.0"}
 authors = [{name = "AndreBFarias"}]
 
+[project.scripts]
+pdfforge = "main:main"
+
 [tool.ruff]
 line-length = 100
 target-version = "py310"
 select = ["E", "F", "W", "I", "UP"]
-exclude = ["venv/", ".venv/", "sprints/", "QR-Code-Void-Generator/"]
+exclude = ["venv/", ".venv/", "docs/sprints/", "QR-Code-Void-Generator/"]
 
 [tool.ruff.format]
 quote-style = "double"

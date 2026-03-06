@@ -100,19 +100,28 @@ class FilePathButton(QPushButton):
             raw, _ = QFileDialog.getOpenFileName(
                 self, "Selecionar PDF", start, "PDF (*.pdf)"
             )
-            if raw:
-                path = Path(raw)
-                self.set_path(path)
-                self.path_selected.emit(path)
-        else:
+        elif self._mode == "image":
+            start = str(self._path.parent) if self._path else ""
+            raw, _ = QFileDialog.getOpenFileName(
+                self, "Selecionar Imagem", start, "Imagens (*.png *.jpg *.jpeg *.bmp)"
+            )
+        elif self._mode == "save":
+            start = str(self._path.parent) if self._path else ""
+            raw, _ = QFileDialog.getSaveFileName(
+                self, "Salvar como", start, "PDF (*.pdf)"
+            )
+        elif self._mode == "dir":
             start = str(self._path) if self._path else ""
             raw = QFileDialog.getExistingDirectory(
-                self, "Selecionar Pasta de Saída", start
+                self, "Selecionar Pasta", start
             )
-            if raw:
-                path = Path(raw)
-                self.set_path(path)
-                self.path_selected.emit(path)
+        else:
+            return
+
+        if raw:
+            path = Path(raw)
+            self.set_path(path)
+            self.path_selected.emit(path)
 
 
 class SectionHeader(QLabel):
