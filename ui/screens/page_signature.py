@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
 )
 
 from config.settings import Settings
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
 from ui.workers import ReinsertWorker, SignatureWorker
 
@@ -71,13 +71,13 @@ class PageSignature(QWidget):
         lbl_img = QLabel("Imagem para reinserção (PNG/JPG)")
         lbl_img.setStyleSheet(f"color: {DraculaTheme.COMMENT}; font-weight: bold;")
         layout.addWidget(lbl_img)
-        self._btn_img = FilePathButton("Selecionar imagem  ", mode="pdf")
+        self._btn_img = FilePathButton("Selecionar imagem  ", mode="image")
         layout.addWidget(self._btn_img)
 
         lbl_out = QLabel("PDF de saída")
         lbl_out.setStyleSheet(f"color: {DraculaTheme.COMMENT}; font-weight: bold;")
         layout.addWidget(lbl_out)
-        self._btn_out = FilePathButton("Selecionar arquivo de saída (.pdf)  ", mode="pdf")
+        self._btn_out = FilePathButton("Selecionar arquivo de saída (.pdf)  ", mode="save")
         layout.addWidget(self._btn_out)
 
         self._lbl_status = QLabel("Pronto.")
@@ -153,6 +153,8 @@ class PageSignature(QWidget):
             doc.close()
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.GREEN};")
             self._lbl_status.setText(f"Extraida em: {out_path}")
+            if out_path.exists():
+                ExportDialog(out_path, self).exec()
         except Exception as exc:
             logger.error("Erro ao extrair assinatura: %s", exc)
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.RED};")
@@ -192,6 +194,9 @@ class PageSignature(QWidget):
         if ok:
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.GREEN};")
             self._lbl_status.setText("Assinatura reinserida com sucesso.")
+            out = self._btn_out.current_path
+            if out and out.exists():
+                ExportDialog(out, self).exec()
         else:
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.RED};")
             self._lbl_status.setText("Falha ao reinserir assinatura.")

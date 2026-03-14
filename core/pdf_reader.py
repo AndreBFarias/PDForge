@@ -128,3 +128,6 @@ class PDFReader:
     def get_image_only_pages(self) -> list[int]:
         """Retorna índices de páginas que são imagens (sem texto extraível)."""
         return [i for i in range(len(self._doc)) if self._inspect_page(i).is_image_only]
+
+
+# "Ler é pensar com o cérebro alheio." — Arthur Schopenhauer

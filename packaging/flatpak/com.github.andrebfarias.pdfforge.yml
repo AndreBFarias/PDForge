@@ -1,0 +1,35 @@
+app-id: com.github.andrebfarias.pdfforge
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: pdfforge
+
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --socket=wayland
+  - --filesystem=home
+  - --device=dri
+
+modules:
+  - name: python3-deps
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-index --find-links=deps/ -r requirements.txt --prefix=/app
+    sources:
+      - type: dir
+        path: .
+
+  - name: pdfforge
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/share/pdfforge
+      - cp -r . /app/share/pdfforge/
+      - install -Dm755 pdfforge-wrapper.sh /app/bin/pdfforge
+    sources:
+      - type: dir
+        path: ../../
+      - type: script
+        dest-filename: pdfforge-wrapper.sh
+        commands:
+          - exec python3 /app/share/pdfforge/main.py "$@"

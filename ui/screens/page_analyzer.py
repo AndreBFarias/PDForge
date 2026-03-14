@@ -19,7 +19,7 @@ from PyQt6.QtWidgets import (
 
 from core.font_detector import FontDetector
 from core.metadata import PDFMetadata
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from utils.file_utils import ensure_output_path
 from ui.styles import DraculaTheme
 
@@ -90,6 +90,8 @@ class PageAnalyzer(QWidget):
 
     def _setup_fonts_tab(self) -> None:
         container = QWidget()
+        container.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+        container.setAutoFillBackground(True)
         vbox = QVBoxLayout(container)
         vbox.setContentsMargins(0, 8, 0, 0)
 
@@ -100,6 +102,7 @@ class PageAnalyzer(QWidget):
         self._font_table.horizontalHeader().setStretchLastSection(True)
         self._font_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self._font_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self._font_table.verticalHeader().setDefaultSectionSize(36)
         self._font_table.verticalHeader().setVisible(False)
         vbox.addWidget(self._font_table)
 
@@ -108,9 +111,12 @@ class PageAnalyzer(QWidget):
     def _setup_metadata_tab(self) -> None:
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
+        scroll.setAutoFillBackground(True)
         scroll.setStyleSheet("border: none;")
 
         container = QWidget()
+        container.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+        container.setAutoFillBackground(True)
         container.setStyleSheet(f"background-color: {DraculaTheme.BACKGROUND};")
         self._meta_form = QFormLayout(container)
         self._meta_form.setContentsMargins(12, 12, 12, 12)
@@ -165,7 +171,7 @@ class PageAnalyzer(QWidget):
                 pages_str += f" (+{len(usage.pages) - 8})"
 
             items = [
-                QTableWidgetItem(usage.info.name),
+                QTableWidgetItem(usage.info.display_name),
                 QTableWidgetItem(str(usage.occurrences)),
                 QTableWidgetItem(pages_str),
                 QTableWidgetItem(f"{usage.avg_size:.1f}"),
@@ -228,6 +234,8 @@ class PageAnalyzer(QWidget):
             PDFMetadata().clear(doc, output_path)
             doc.close()
             self._toast.show_message(f"Metadados removidos → {output_path.name}")
+            if output_path.exists():
+                ExportDialog(output_path, self).exec()
         except Exception as exc:
             logger.error("Falha ao limpar metadados: %s", exc, exc_info=True)
             self._toast.show_message(f"Erro: {exc}")

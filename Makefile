@@ -1,4 +1,4 @@
-.PHONY: install dev test lint clean build
+.PHONY: install dev test lint clean build package-deb package-appimage package-flatpak package-all
 
 VENV = venv
 PYTHON = $(VENV)/bin/python
@@ -29,3 +29,14 @@ clean:
 
 build:
 	$(VENV)/bin/python -m build
+
+package-deb:
+	bash packaging/build-deb.sh
+
+package-appimage:
+	bash packaging/appimage/build-appimage.sh
+
+package-flatpak:
+	bash packaging/build-flatpak.sh
+
+package-all: package-deb package-appimage package-flatpak

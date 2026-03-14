@@ -52,19 +52,19 @@
 ```
 Tela (QWidget)
   │  evento do usuário
-  ▼
+  
 Worker (QThread)
   │  chama módulo core
-  ▼
+  
 Core (lógica pura)
   │  retorna dataclass Result
-  ▼
+  
 Worker.finished.emit(result)
   │  sinal Qt
-  ▼
+  
 Tela._on_finished(result)
   │  atualiza UI
-  ▼
+  
 MainWindow._load_pdf(path)  ← se novo PDF gerado
 ```
 

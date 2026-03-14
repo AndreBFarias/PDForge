@@ -119,3 +119,6 @@ class GPUMonitor:
         if self.cuda_available:
             torch.cuda.empty_cache()
             logger.debug("Cache CUDA liberado")
+
+
+# "O poder de processamento dobra a cada dezoito meses." — Gordon Moore

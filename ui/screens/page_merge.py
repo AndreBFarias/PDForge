@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
 from ui.widgets.drag_drop_list import DragDropPDFList
 from ui.workers import MergeWorker
@@ -69,7 +69,7 @@ class PageMerge(QWidget):
         lbl_out.setStyleSheet(f"color: {DraculaTheme.COMMENT}; font-weight: bold;")
         layout.addWidget(lbl_out)
 
-        self._btn_out = FilePathButton("Selecionar arquivo de saída (.pdf)  ", mode="pdf")
+        self._btn_out = FilePathButton("Selecionar arquivo de saída (.pdf)  ", mode="save")
         layout.addWidget(self._btn_out)
 
         self._progress = QProgressBar()
@@ -142,6 +142,8 @@ class PageMerge(QWidget):
             f"Concluido: {result.total_pages} paginas, {size_mb:.2f} MB -> {result.output_path.name}"
         )
         self.pdf_changed.emit(result.output_path)
+        if result.output_path.exists():
+            ExportDialog(result.output_path, self).exec()
 
     def _on_error(self, msg: str) -> None:
         self._btn_run.setEnabled(True)

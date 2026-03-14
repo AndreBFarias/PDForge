@@ -14,7 +14,9 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from config.settings import APP_NAME, APP_VERSION
+from PyQt6.QtGui import QColor, QIcon, QPainter, QPalette, QPixmap
+
+from config.settings import APP_NAME
 from core.pdf_reader import PDFReader
 from ui.components import Toast
 from ui.screens.page_analyzer import PageAnalyzer
@@ -24,12 +26,30 @@ from ui.screens.page_compress import PageCompress
 from ui.screens.page_editor import PageEditor
 from ui.screens.page_merge import PageMerge
 from ui.screens.page_ocr import PageOCR
+from ui.screens.page_images import PageImages
+from ui.screens.page_organizer import PageOrganizer
+from ui.screens.page_security import PageSecurity
 from ui.screens.page_signature import PageSignature
 from ui.screens.page_split import PageSplit
+from ui.screens.page_watermark import PageWatermark
 from ui.styles import DraculaTheme
 from ui.widgets.pdf_page_viewer import PDFPageViewer
 
 logger = logging.getLogger("pdfforge.main_window")
+
+
+class _OpaquePanel(QWidget):
+    """QWidget que pinta seu background via paintEvent, garantindo opacidade total."""
+
+    def __init__(self, color: str, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self._bg = QColor(color)
+
+    def paintEvent(self, event) -> None:
+        painter = QPainter(self)
+        painter.fillRect(self.rect(), self._bg)
+        painter.end()
+
 
 _SIDEBAR_ITEMS = [
     ("✎", "Editor"),
@@ -38,6 +58,10 @@ _SIDEBAR_ITEMS = [
     ("⊕", "Mesclar"),
     ("⊘", "Dividir"),
     ("⇩", "Comprimir"),
+    ("⊗", "Segurança"),
+    ("▣", "Imagens"),
+    ("◆", "Marca d'Água"),
+    ("⊞", "Organizar"),
     ("✍", "Assinaturas"),
     ("◈", "Classificar"),
     ("☰", "Lote"),
@@ -57,7 +81,7 @@ class MainWindow(QMainWindow):
         self._output_dir: Path | None = None
         self._preview_reader: PDFReader | None = None
 
-        self.setWindowTitle(f"{APP_NAME} {APP_VERSION}")
+        self.setWindowTitle(APP_NAME)
         self.setMinimumSize(1300, 800)
         self.resize(1400, 860)
         self.setStyleSheet(DraculaTheme.STYLESHEET)
@@ -69,7 +93,7 @@ class MainWindow(QMainWindow):
             self._load_pdf(initial_pdf)
 
     def _setup_ui(self) -> None:
-        central = QWidget()
+        central = _OpaquePanel(DraculaTheme.BACKGROUND)
         self.setCentralWidget(central)
         main_layout = QHBoxLayout(central)
         main_layout.setContentsMargins(0, 0, 0, 0)
@@ -86,32 +110,32 @@ class MainWindow(QMainWindow):
     # ------------------------------------------------------------------
 
     def _setup_sidebar(self, parent_layout: QHBoxLayout) -> None:
-        container = QWidget()
+        container = _OpaquePanel(DraculaTheme.SIDEBAR)
         container.setFixedWidth(220)
-        container.setStyleSheet(
-            f"background-color: {DraculaTheme.SIDEBAR}; border: none;"
-        )
         vbox = QVBoxLayout(container)
         vbox.setContentsMargins(0, 24, 0, 20)
         vbox.setSpacing(0)
 
+        logo_path = Path(__file__).parent.parent / "assets" / "PDForge.png"
+        if logo_path.exists():
+            logo_label = QLabel()
+            logo_pixmap = QPixmap(str(logo_path)).scaledToHeight(
+                56, Qt.TransformationMode.SmoothTransformation,
+            )
+            logo_label.setPixmap(logo_pixmap)
+            logo_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            logo_label.setStyleSheet("background-color: transparent; margin-bottom: 4px;")
+            vbox.addWidget(logo_label)
+
         title = QLabel(
-            f'<span style="font-size:20px; font-weight:700; color:#ffffff;">'
-            f"PDF</span>"
-            f'<span style="font-size:20px; font-weight:700;'
+            f'<span style="font-size:18px; font-weight:700; color:#ffffff;">'
+            f"PD</span>"
+            f'<span style="font-size:18px; font-weight:700;'
             f' color:{DraculaTheme.PURPLE};">Forge</span>'
         )
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        title.setStyleSheet("background-color: transparent; margin-bottom: 4px;")
+        title.setStyleSheet("background-color: transparent; margin-bottom: 20px;")
         vbox.addWidget(title)
-
-        sub = QLabel(f"v{APP_VERSION}")
-        sub.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        sub.setStyleSheet(
-            f"color: {DraculaTheme.COMMENT}; font-size: 11px;"
-            " background-color: transparent; margin-bottom: 20px;"
-        )
-        vbox.addWidget(sub)
 
         sep = QWidget()
         sep.setFixedHeight(1)
@@ -143,7 +167,7 @@ class MainWindow(QMainWindow):
     # ------------------------------------------------------------------
 
     def _setup_content(self, parent_layout: QHBoxLayout) -> None:
-        container = QWidget()
+        container = _OpaquePanel(DraculaTheme.BACKGROUND)
         container.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         vbox = QVBoxLayout(container)
         vbox.setContentsMargins(0, 0, 0, 0)
@@ -152,27 +176,46 @@ class MainWindow(QMainWindow):
         self._stack = QStackedWidget()
         vbox.addWidget(self._stack)
 
-        self._page_editor = PageEditor(use_gpu=self._use_gpu)       # índice 0
-        self._page_analyzer = PageAnalyzer(use_gpu=self._use_gpu)   # índice 1
-        self._page_ocr = PageOCR(use_gpu=self._use_gpu)             # índice 2
-        self._page_merge = PageMerge(use_gpu=self._use_gpu)         # índice 3
-        self._page_split = PageSplit(use_gpu=self._use_gpu)         # índice 4
-        self._page_compress = PageCompress(use_gpu=self._use_gpu)   # índice 5
-        self._page_signature = PageSignature(use_gpu=self._use_gpu) # índice 6
-        self._page_classifier = PageClassifier(use_gpu=self._use_gpu)  # índice 7
-        self._page_batch = PageBatch(use_gpu=self._use_gpu)         # índice 8
+        self._page_editor = PageEditor(use_gpu=self._use_gpu)
+        self._page_analyzer = PageAnalyzer(use_gpu=self._use_gpu)
+        self._page_ocr = PageOCR(use_gpu=self._use_gpu)
+        self._page_merge = PageMerge(use_gpu=self._use_gpu)
+        self._page_split = PageSplit(use_gpu=self._use_gpu)
+        self._page_compress = PageCompress(use_gpu=self._use_gpu)
+        self._page_security = PageSecurity(use_gpu=self._use_gpu)
+        self._page_images = PageImages(use_gpu=self._use_gpu)
+        self._page_watermark = PageWatermark(use_gpu=self._use_gpu)
+        self._page_organizer = PageOrganizer(use_gpu=self._use_gpu)
+        self._page_signature = PageSignature(use_gpu=self._use_gpu)
+        self._page_classifier = PageClassifier(use_gpu=self._use_gpu)
+        self._page_batch = PageBatch(use_gpu=self._use_gpu)
+
+        self._all_pages = (
+            self._page_editor, self._page_analyzer, self._page_ocr,
+            self._page_merge, self._page_split, self._page_compress,
+            self._page_security, self._page_images,
+            self._page_watermark, self._page_organizer,
+            self._page_signature, self._page_classifier,
+            self._page_batch,
+        )
+
+        for page in self._all_pages:
+            page.setAttribute(
+                Qt.WidgetAttribute.WA_StyledBackground, True,
+            )
+            page.setAutoFillBackground(True)
+            pal_page = page.palette()
+            pal_page.setColor(
+                QPalette.ColorRole.Window,
+                QColor(DraculaTheme.BACKGROUND),
+            )
+            page.setPalette(pal_page)
+            self._stack.addWidget(page)
 
         for page in (
             self._page_editor, self._page_analyzer, self._page_ocr,
-            self._page_merge, self._page_split, self._page_compress,
-            self._page_signature, self._page_classifier, self._page_batch,
+            self._page_merge, self._page_split, self._page_batch,
         ):
-            self._stack.addWidget(page)
-
-        for page in (self._page_editor, self._page_analyzer, self._page_ocr):
-            page.pdf_changed.connect(self._load_pdf)
-
-        for page in (self._page_merge, self._page_split):
             page.pdf_changed.connect(self._load_pdf)
 
         parent_layout.addWidget(container)
@@ -182,11 +225,10 @@ class MainWindow(QMainWindow):
     # ------------------------------------------------------------------
 
     def _setup_preview(self, parent_layout: QHBoxLayout) -> None:
-        container = QWidget()
+        container = _OpaquePanel(DraculaTheme.BACKGROUND)
         container.setFixedWidth(420)
         container.setStyleSheet(
-            f"background-color: {DraculaTheme.BACKGROUND};"
-            f" border-left: 1px solid {DraculaTheme.CURRENT_LINE};"
+            f"border-left: 1px solid {DraculaTheme.CURRENT_LINE};"
         )
         vbox = QVBoxLayout(container)
         vbox.setContentsMargins(16, 24, 16, 16)
@@ -269,11 +311,7 @@ class MainWindow(QMainWindow):
         self._refresh_all_pages()
 
     def _refresh_all_pages(self) -> None:
-        for page in (
-            self._page_editor, self._page_analyzer, self._page_ocr, self._page_batch,
-            self._page_merge, self._page_split, self._page_compress,
-            self._page_signature, self._page_classifier,
-        ):
+        for page in self._all_pages:
             page.refresh_state(self._current_pdf, self._output_dir)
 
     def _load_pdf(self, path: Path) -> None:
@@ -305,7 +343,18 @@ class MainWindow(QMainWindow):
             self._reset_preview(error=str(exc))
 
     def _reset_preview(self, error: str = "") -> None:
-        self._lbl_file_v.setText("—")
+        if error:
+            self._lbl_file_v.setText(f"Erro: {error[:50]}")
+            self._lbl_file_v.setStyleSheet(
+                f"color: {DraculaTheme.RED}; font-size: 12px;"
+                " background-color: transparent;"
+            )
+        else:
+            self._lbl_file_v.setText("—")
+            self._lbl_file_v.setStyleSheet(
+                f"color: {DraculaTheme.FOREGROUND}; font-size: 12px;"
+                " background-color: transparent;"
+            )
         self._lbl_pages_v.setText("—")
         self._lbl_ver_v.setText("—")
         self._lbl_size_v.setText("—")

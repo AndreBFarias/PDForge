@@ -11,7 +11,7 @@ try:
 except ImportError:
     CV2_AVAILABLE = False
 
-logger = logging.getLogger("pdfforge")
+logger = logging.getLogger("pdfforge.signature")
 
 
 @dataclass

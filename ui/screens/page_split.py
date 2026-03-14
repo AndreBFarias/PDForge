@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
 from ui.workers import SplitWorker
 
@@ -58,6 +58,8 @@ class PageSplit(QWidget):
 
         # Aba Por Range
         tab_range = QWidget()
+        tab_range.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+        tab_range.setAutoFillBackground(True)
         vbox_range = QVBoxLayout(tab_range)
         vbox_range.setContentsMargins(12, 12, 12, 12)
         lbl_range = QLabel('Páginas base 0, separadas por vírgula. Ex: "0-2, 3-4, 5-9"')
@@ -71,6 +73,8 @@ class PageSplit(QWidget):
 
         # Aba Por Tamanho
         tab_size = QWidget()
+        tab_size.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+        tab_size.setAutoFillBackground(True)
         vbox_size = QVBoxLayout(tab_size)
         vbox_size.setContentsMargins(12, 12, 12, 12)
         lbl_size = QLabel("Tamanho máximo por parte (MB):")
@@ -86,6 +90,8 @@ class PageSplit(QWidget):
 
         # Aba Por Marcadores
         tab_bk = QWidget()
+        tab_bk.setAttribute(Qt.WidgetAttribute.WA_StyledBackground, True)
+        tab_bk.setAutoFillBackground(True)
         vbox_bk = QVBoxLayout(tab_bk)
         vbox_bk.setContentsMargins(12, 12, 12, 12)
         lbl_bk = QLabel("Divide o PDF nos marcadores (TOC) de nível 1.")
@@ -191,6 +197,9 @@ class PageSplit(QWidget):
             extra = f" (+{len(result.output_files)-4} mais)" if len(result.output_files) > 4 else ""
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.GREEN};")
             self._lbl_status.setText(f"{len(result.output_files)} arquivo(s): {names}{extra}")
+            out_dir = self._btn_out.current_path
+            if out_dir and out_dir.exists():
+                ExportDialog(out_dir, self).exec()
         else:
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.RED};")
             self._lbl_status.setText(f"Erro: {result.error}")

@@ -16,7 +16,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
 from ui.workers import DocxWorker, ReplaceWorker
 from utils.file_utils import ensure_output_path
@@ -79,6 +79,7 @@ class PageEditor(QWidget):
             | QAbstractItemView.EditTrigger.SelectedClicked
         )
         self._pairs_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self._pairs_table.verticalHeader().setDefaultSectionSize(36)
         self._pairs_table.verticalHeader().setVisible(False)
         self._pairs_table.setMinimumHeight(120)
         layout.addWidget(self._pairs_table)
@@ -87,7 +88,7 @@ class PageEditor(QWidget):
         table_btn_row = QHBoxLayout()
         table_btn_row.setSpacing(8)
 
-        self._btn_add_pair = QPushButton("+ Par")
+        self._btn_add_pair = QPushButton("+ Adicionar")
         self._btn_add_pair.setObjectName("secondaryBtn")
         self._btn_add_pair.setCursor(Qt.CursorShape.PointingHandCursor)
         self._btn_add_pair.clicked.connect(self._add_pair_row)
@@ -225,6 +226,7 @@ class PageEditor(QWidget):
         if self._docx_worker and self._docx_worker.isRunning():
             return
 
+        out_dir.mkdir(parents=True, exist_ok=True)
         output_path = out_dir / (pdf.stem + ".docx")
         self._btn_export.setEnabled(False)
         self._btn_export.setText("Exportando...")
@@ -248,6 +250,8 @@ class PageEditor(QWidget):
             + f"\nSalvo em: {result.output_path.name}"
         )
         logger.info("Substituição concluída: %s", result)
+        if result.output_path and result.output_path.exists():
+            ExportDialog(result.output_path, self).exec()
 
     def _on_error(self, msg: str) -> None:
         self._btn_run.setEnabled(True)
@@ -265,6 +269,8 @@ class PageEditor(QWidget):
         )
         self._lbl_result.setText(f"DOCX gerado: {output_path.name}")
         logger.info("Exportação DOCX concluída: %s", output_path)
+        if output_path.exists():
+            ExportDialog(output_path, self).exec()
 
     def _on_docx_error(self, msg: str) -> None:
         self._btn_export.setEnabled(True)

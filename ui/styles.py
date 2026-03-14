@@ -162,6 +162,31 @@ class DraculaTheme:
         background-color: rgba(255, 85, 85, 0.18);
     }}
 
+    /* ─── Navigation / compact buttons ─── */
+    QPushButton#navBtn {{
+        background-color: transparent;
+        color: {COMMENT};
+        border: 1px solid rgba(68, 71, 90, 0.6);
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        min-height: 28px;
+        max-height: 28px;
+        padding: 0 8px;
+    }}
+    QPushButton#navBtn:hover {{
+        background-color: rgba(68, 71, 90, 0.5);
+        color: {FOREGROUND};
+        border-color: rgba(189, 147, 249, 0.4);
+    }}
+    QPushButton#navBtn:pressed {{
+        background-color: rgba(68, 71, 90, 0.8);
+    }}
+    QPushButton#navBtn:disabled {{
+        color: rgba(98, 114, 164, 0.3);
+        border-color: rgba(68, 71, 90, 0.3);
+    }}
+
     /* ─── File picker / drop zone ─── */
     QPushButton#fileBtn {{
         background-color: rgba(33, 34, 44, 0.6);
@@ -292,6 +317,11 @@ class DraculaTheme:
     QTableWidget::item:selected {{
         background-color: rgba(189, 147, 249, 0.14);
         color: {PURPLE};
+    }}
+    QTableWidget QLineEdit {{
+        border-radius: 2px;
+        padding: 2px 6px;
+        min-height: 0px;
     }}
     QHeaderView::section {{
         background-color: {SIDEBAR};
