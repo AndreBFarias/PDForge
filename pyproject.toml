@@ -1,6 +1,6 @@
 [project]
 name = "pdfforge"
-version = "1.0.0"
+version = "1.1.0"
 description = "Editor de PDF com GUI e ML/AI para Linux"
 requires-python = ">=3.10"
 license = {text = "GPL-3.0"}
