@@ -37,7 +37,7 @@ jobs:
       - name: Instalar dependencias do sistema
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-glx libxcb-xinerama0 xvfb
+          sudo apt-get install -y libgl1 libxcb-xinerama0 xvfb
 
       - name: Instalar dependencias Python
         run: |
