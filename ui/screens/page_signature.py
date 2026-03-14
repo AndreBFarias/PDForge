@@ -14,7 +14,7 @@ from PyQt6.QtWidgets import (
 )
 
 from config.settings import Settings
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
 from ui.workers import ReinsertWorker, SignatureWorker
 
@@ -153,6 +153,8 @@ class PageSignature(QWidget):
             doc.close()
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.GREEN};")
             self._lbl_status.setText(f"Extraida em: {out_path}")
+            if out_path.exists():
+                ExportDialog(out_path, self).exec()
         except Exception as exc:
             logger.error("Erro ao extrair assinatura: %s", exc)
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.RED};")
@@ -192,6 +194,9 @@ class PageSignature(QWidget):
         if ok:
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.GREEN};")
             self._lbl_status.setText("Assinatura reinserida com sucesso.")
+            out = self._btn_out.current_path
+            if out and out.exists():
+                ExportDialog(out, self).exec()
         else:
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.RED};")
             self._lbl_status.setText("Falha ao reinserir assinatura.")

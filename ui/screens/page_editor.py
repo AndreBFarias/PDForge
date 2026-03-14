@@ -16,7 +16,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
 from ui.workers import DocxWorker, ReplaceWorker
 from utils.file_utils import ensure_output_path
@@ -250,6 +250,8 @@ class PageEditor(QWidget):
             + f"\nSalvo em: {result.output_path.name}"
         )
         logger.info("Substituição concluída: %s", result)
+        if result.output_path and result.output_path.exists():
+            ExportDialog(result.output_path, self).exec()
 
     def _on_error(self, msg: str) -> None:
         self._btn_run.setEnabled(True)
@@ -267,6 +269,8 @@ class PageEditor(QWidget):
         )
         self._lbl_result.setText(f"DOCX gerado: {output_path.name}")
         logger.info("Exportação DOCX concluída: %s", output_path)
+        if output_path.exists():
+            ExportDialog(output_path, self).exec()
 
     def _on_docx_error(self, msg: str) -> None:
         self._btn_export.setEnabled(True)

@@ -1,4 +1,5 @@
 import logging
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
 
@@ -8,6 +9,18 @@ from config.settings import OCR_BATCH_MAX_PAGES, OCR_IMAGE_SCALE
 from utils.gpu_utils import GPUMonitor
 
 logger = logging.getLogger("pdfforge.ocr")
+
+
+@dataclass
+class OCRPageResult:
+    text: str
+    details: list[tuple] = field(default_factory=list)
+
+    def strip(self) -> str:
+        return self.text.strip()
+
+    def __str__(self) -> str:
+        return self.text
 
 
 class OCREngine:
@@ -38,7 +51,6 @@ class OCREngine:
             try:
                 import easyocr
                 stats = self._gpu_monitor.get_stats()
-                # Verificar VRAM disponível antes de carregar modelo
                 if self._use_gpu and stats.vram_free_mb < 1500:
                     logger.warning(
                         "VRAM livre insuficiente (%.0f MB) — forçando CPU",
@@ -58,10 +70,10 @@ class OCREngine:
         self,
         page: fitz.Page,
         on_progress: Callable[[str], None] | None = None,
-    ) -> str:
+    ) -> OCRPageResult:
         """
         Executa OCR em uma página do PDF.
-        Retorna o texto extraído como string.
+        Retorna OCRPageResult com texto e bounding boxes detalhados.
         """
         mat = fitz.Matrix(OCR_IMAGE_SCALE, OCR_IMAGE_SCALE)
         pix = page.get_pixmap(matrix=mat, alpha=False)
@@ -71,25 +83,25 @@ class OCREngine:
             on_progress(f"Processando página {page.number + 1}...")
 
         reader = self._get_reader()
-        results = reader.readtext(img_bytes, detail=0, paragraph=True)
-        text = "\n".join(results)
+        detailed = reader.readtext(img_bytes, detail=1, paragraph=False)
+        text = "\n".join(item[1] for item in detailed)
         logger.debug("Página %d: %d chars extraídos via OCR", page.number, len(text))
-        return text
+        return OCRPageResult(text=text, details=detailed)
 
     def recognize_document(
         self,
         doc: fitz.Document,
         page_indices: list[int] | None = None,
         on_progress: Callable[[int, int, str], None] | None = None,
-    ) -> dict[int, str]:
+    ) -> dict[int, OCRPageResult]:
         """
         Executa OCR nas páginas indicadas (ou em todas se None).
         Respeita o limite de páginas simultâneas para RTX 3050.
 
-        Retorna {page_num: texto_ocr}.
+        Retorna {page_num: OCRPageResult}.
         """
         indices = page_indices if page_indices is not None else list(range(len(doc)))
-        results: dict[int, str] = {}
+        results: dict[int, OCRPageResult] = {}
 
         total = len(indices)
         for batch_start in range(0, total, OCR_BATCH_MAX_PAGES):
@@ -109,22 +121,31 @@ class OCREngine:
     def save_ocr_layer(
         self,
         doc: fitz.Document,
-        ocr_results: dict[int, str],
+        ocr_results: dict[int, OCRPageResult],
         output_path: Path,
     ) -> None:
         """
-        Insere texto OCR como camada invisível sobre as páginas-imagem.
-        Permite busca no texto mesmo em PDFs escaneados.
+        Insere texto OCR como camada invisível posicionada sobre as coordenadas
+        reais de cada palavra detectada. Permite busca e seleção de texto em
+        PDFs escaneados com posicionamento preciso.
         """
-        for page_num, text in ocr_results.items():
+        scale = OCR_IMAGE_SCALE
+
+        for page_num, page_result in ocr_results.items():
             page = doc[page_num]
-            page.insert_text(
-                fitz.Point(10, 10),
-                text,
-                fontsize=1,
-                color=(1, 1, 1),    # branco invisível
-                overlay=True,
-            )
+            for bbox, text, _conf in page_result.details:
+                x0 = min(p[0] for p in bbox) / scale
+                y0 = min(p[1] for p in bbox) / scale
+                y1 = max(p[1] for p in bbox) / scale
+                fontsize = max(1.0, (y1 - y0) * 0.8)
+                page.insert_text(
+                    fitz.Point(x0, y1),
+                    text,
+                    fontsize=fontsize,
+                    color=(1, 1, 1),
+                    overlay=True,
+                )
+
         doc.save(str(output_path), garbage=4, deflate=True)
         logger.info("Camada OCR salva em: %s", output_path.name)
 

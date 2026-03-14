@@ -68,20 +68,22 @@ class PDFSplitter:
                     current_size = buf.tell()
                     test_doc.close()
 
-                    if current_size > max_bytes and end_page > start_page:
-                        end_page -= 1
+                    if current_size > max_bytes:
+                        if end_page > start_page:
+                            end_page -= 1
                         break
                     end_page += 1
 
+                last_page = min(end_page, total_pages - 1)
                 out_path = output_dir / f"{base_name}_parte{part_num:02d}.pdf"
                 chunk = fitz.open()
-                chunk.insert_pdf(doc, from_page=start_page, to_page=end_page - 1)
+                chunk.insert_pdf(doc, from_page=start_page, to_page=last_page)
                 chunk.save(str(out_path))
                 chunk.close()
                 result.output_files.append(out_path)
-                logger.debug("Split tamanho parte %d: pags %d-%d", part_num, start_page, end_page - 1)
+                logger.debug("Split tamanho parte %d: pags %d-%d", part_num, start_page, last_page)
 
-                start_page = end_page
+                start_page = last_page + 1
                 part_num += 1
         except Exception as exc:
             logger.error("Erro no split por tamanho: %s", exc)

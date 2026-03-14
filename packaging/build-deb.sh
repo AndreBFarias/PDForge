@@ -38,7 +38,11 @@ rsync -a \
 
 cat > "$BUILD_DIR/usr/local/bin/$PKG_NAME" <<'WRAPPER'
 #!/bin/bash
-exec /opt/pdfforge/venv/bin/python /opt/pdfforge/main.py "$@"
+if [ -x /opt/pdfforge/venv/bin/python ]; then
+    exec /opt/pdfforge/venv/bin/python /opt/pdfforge/main.py "$@"
+else
+    exec python3 /opt/pdfforge/main.py "$@"
+fi
 WRAPPER
 chmod 755 "$BUILD_DIR/usr/local/bin/$PKG_NAME"
 

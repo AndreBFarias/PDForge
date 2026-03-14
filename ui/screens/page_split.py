@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
 from ui.workers import SplitWorker
 
@@ -197,6 +197,9 @@ class PageSplit(QWidget):
             extra = f" (+{len(result.output_files)-4} mais)" if len(result.output_files) > 4 else ""
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.GREEN};")
             self._lbl_status.setText(f"{len(result.output_files)} arquivo(s): {names}{extra}")
+            out_dir = self._btn_out.current_path
+            if out_dir and out_dir.exists():
+                ExportDialog(out_dir, self).exec()
         else:
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.RED};")
             self._lbl_status.setText(f"Erro: {result.error}")

@@ -16,7 +16,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
 from ui.workers import BatchWorker
 
@@ -183,6 +183,10 @@ class PageBatch(QWidget):
 
         if first_success_path is not None:
             self.pdf_changed.emit(first_success_path)
+
+        out_dir = self._btn_out.current_path
+        if out_dir and out_dir.exists():
+            ExportDialog(out_dir, self).exec()
 
     def _on_error(self, msg: str) -> None:
         self._btn_run.setEnabled(True)

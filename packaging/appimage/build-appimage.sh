@@ -36,21 +36,19 @@ fi
 cp "$(which python3)" "$APPDIR/usr/bin/python3"
 
 PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
-SITE_PACKAGES="/usr/lib/python${PYTHON_VERSION}"
-if [ -d "$SITE_PACKAGES" ]; then
-    cp -r "$SITE_PACKAGES" "$APPDIR/usr/lib/" 2>/dev/null || true
-fi
+DEPS_DIR="$APPDIR/usr/lib/python${PYTHON_VERSION}/site-packages"
+mkdir -p "$DEPS_DIR"
 
-if [ -d "$PROJECT_DIR/venv/lib" ]; then
-    cp -r "$PROJECT_DIR/venv/lib/python${PYTHON_VERSION}/site-packages" "$APPDIR/usr/lib/python${PYTHON_VERSION}/" 2>/dev/null || true
-fi
+pip install --target="$DEPS_DIR" -r "$PROJECT_DIR/requirements.txt" --quiet
 
 APPIMAGETOOL="$SCRIPT_DIR/appimagetool"
 if [ ! -f "$APPIMAGETOOL" ]; then
     echo "Baixando appimagetool..."
     ARCH=$(uname -m)
-    wget -q "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-${ARCH}.AppImage" -O "$APPIMAGETOOL"
+    TOOL_URL="https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-${ARCH}.AppImage"
+    wget -q "$TOOL_URL" -O "$APPIMAGETOOL"
     chmod +x "$APPIMAGETOOL"
+    echo "appimagetool cacheado em $APPIMAGETOOL"
 fi
 
 ARCH=$(uname -m) "$APPIMAGETOOL" "$APPDIR" "$SCRIPT_DIR/PDForge-${VERSION}-${ARCH}.AppImage"

@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ui.components import FilePathButton, SectionHeader, Toast
+from ui.components import ExportDialog, FilePathButton, SectionHeader, Toast
 from ui.styles import DraculaTheme
 from ui.workers import OCRWorker
 from utils.file_utils import ensure_output_path
@@ -39,6 +39,7 @@ class PageOCR(QWidget):
         super().__init__(parent)
         self._use_gpu = use_gpu
         self._worker: OCRWorker | None = None
+        self._last_output: Path | None = None
         self._setup_ui()
 
     def _setup_ui(self) -> None:
@@ -143,6 +144,7 @@ class PageOCR(QWidget):
         languages = _LANGUAGE_OPTIONS.get(lang_key, ["pt", "en"])
         use_gpu = self._chk_gpu.isChecked()
         output_path = ensure_output_path(pdf, out_dir, suffix="_ocr")
+        self._last_output = output_path
 
         self._btn_run.setEnabled(False)
         self._btn_run.setText("Processando...")
@@ -174,10 +176,14 @@ class PageOCR(QWidget):
 
         preview_texts = []
         for page_num in sorted(results.keys())[:3]:
-            text = results[page_num].strip()
+            page_result = results[page_num]
+            text = page_result.text.strip() if hasattr(page_result, "text") else str(page_result).strip()
             if text:
                 preview_texts.append(f"[Pág. {page_num + 1}]\n{text[:300]}")
         self._txt_result.setPlainText("\n\n".join(preview_texts) or "(nenhum texto extraído)")
+
+        if self._last_output and self._last_output.exists():
+            ExportDialog(self._last_output, self).exec()
 
     def _on_error(self, msg: str) -> None:
         self._btn_run.setEnabled(True)

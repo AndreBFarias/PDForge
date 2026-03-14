@@ -375,4 +375,198 @@ class ClassifyBatchWorker(QThread):
             self.error.emit(str(exc))
 
 
+class SecurityWorker(QThread):
+    finished = pyqtSignal(object)
+    error = pyqtSignal(str)
+
+    def __init__(
+        self,
+        mode: str,
+        input_path: Path,
+        output_path: Path,
+        password: str,
+        owner_password: str | None = None,
+        permissions: int | None = None,
+        parent=None,
+    ) -> None:
+        super().__init__(parent)
+        self._mode = mode
+        self._input_path = input_path
+        self._output_path = output_path
+        self._password = password
+        self._owner_password = owner_password
+        self._permissions = permissions
+
+    def run(self) -> None:
+        try:
+            from core.pdf_security import PDFSecurity
+            security = PDFSecurity()
+            if self._mode == "encrypt":
+                kwargs = {
+                    "input_path": self._input_path,
+                    "output_path": self._output_path,
+                    "user_password": self._password,
+                }
+                if self._owner_password:
+                    kwargs["owner_password"] = self._owner_password
+                if self._permissions is not None:
+                    kwargs["permissions"] = self._permissions
+                result = security.encrypt(**kwargs)
+            else:
+                result = security.decrypt(
+                    self._input_path,
+                    self._output_path,
+                    self._password,
+                )
+            self.finished.emit(result)
+        except Exception as exc:
+            logger.error("SecurityWorker falhou: %s", exc)
+            self.error.emit(str(exc))
+
+
+class ImageConvertWorker(QThread):
+    finished = pyqtSignal(object)
+    progress = pyqtSignal(int, int, str)
+    error = pyqtSignal(str)
+
+    def __init__(
+        self,
+        mode: str,
+        input_path: Path | None = None,
+        output_path: Path | None = None,
+        output_dir: Path | None = None,
+        image_paths: list[Path] | None = None,
+        fmt: str = "png",
+        dpi: int = 150,
+        parent=None,
+    ) -> None:
+        super().__init__(parent)
+        self._mode = mode
+        self._input_path = input_path
+        self._output_path = output_path
+        self._output_dir = output_dir
+        self._image_paths = image_paths or []
+        self._fmt = fmt
+        self._dpi = dpi
+
+    def run(self) -> None:
+        try:
+            from core.pdf_image_converter import PDFImageConverter
+            converter = PDFImageConverter()
+            if self._mode == "pdf_to_images":
+                result = converter.pdf_to_images(
+                    self._input_path,
+                    self._output_dir,
+                    fmt=self._fmt,
+                    dpi=self._dpi,
+                )
+            else:
+                result = converter.images_to_pdf(
+                    self._image_paths,
+                    self._output_path,
+                )
+            self.finished.emit(result)
+        except Exception as exc:
+            logger.error("ImageConvertWorker falhou: %s", exc)
+            self.error.emit(str(exc))
+
+
+class WatermarkWorker(QThread):
+    finished = pyqtSignal(object)
+    error = pyqtSignal(str)
+
+    def __init__(
+        self,
+        mode: str,
+        input_path: Path,
+        output_path: Path,
+        config=None,
+        image_path: Path | None = None,
+        opacity: float = 0.3,
+        scale: float = 1.0,
+        parent=None,
+    ) -> None:
+        super().__init__(parent)
+        self._mode = mode
+        self._input_path = input_path
+        self._output_path = output_path
+        self._config = config
+        self._image_path = image_path
+        self._opacity = opacity
+        self._scale = scale
+
+    def run(self) -> None:
+        try:
+            from core.pdf_watermark import PDFWatermark
+            wm = PDFWatermark()
+            if self._mode == "text":
+                result = wm.apply_text(
+                    self._input_path,
+                    self._output_path,
+                    self._config,
+                )
+            else:
+                result = wm.apply_image(
+                    self._input_path,
+                    self._output_path,
+                    self._image_path,
+                    opacity=self._opacity,
+                    scale=self._scale,
+                )
+            self.finished.emit(result)
+        except Exception as exc:
+            logger.error("WatermarkWorker falhou: %s", exc)
+            self.error.emit(str(exc))
+
+
+class ReorderWorker(QThread):
+    finished = pyqtSignal(object)
+    error = pyqtSignal(str)
+
+    def __init__(
+        self,
+        mode: str,
+        input_path: Path,
+        output_path: Path,
+        new_order: list[int] | None = None,
+        pages_to_delete: list[int] | None = None,
+        page_index: int = 0,
+        parent=None,
+    ) -> None:
+        super().__init__(parent)
+        self._mode = mode
+        self._input_path = input_path
+        self._output_path = output_path
+        self._new_order = new_order or []
+        self._pages_to_delete = pages_to_delete or []
+        self._page_index = page_index
+
+    def run(self) -> None:
+        try:
+            from core.pdf_page_organizer import PDFPageOrganizer
+            org = PDFPageOrganizer()
+            if self._mode == "reorder":
+                result = org.reorder(
+                    self._input_path,
+                    self._output_path,
+                    self._new_order,
+                )
+            elif self._mode == "delete":
+                result = org.delete_pages(
+                    self._input_path,
+                    self._output_path,
+                    self._pages_to_delete,
+                )
+            else:
+                result = org.duplicate_page(
+                    self._input_path,
+                    self._output_path,
+                    self._page_index,
+                )
+            self.finished.emit(result)
+        except Exception as exc:
+            logger.error("ReorderWorker falhou: %s", exc)
+            self.error.emit(str(exc))
+
+
 # "A ação é o antídoto do desespero." — Joan Baez
