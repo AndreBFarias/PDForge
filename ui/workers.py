@@ -172,7 +172,7 @@ class BatchWorker(QThread):
                 from core.pdf_rotator import PDFRotator
 
                 result = PDFRotator().rotate_all(doc, angle, output_path)
-                return f"{result.pages_rotated} paginas rotacionadas {angle}°"
+                return f"{result.pages_rotated} páginas rotacionadas {angle}°"
 
             return _rotate_op
 
@@ -412,16 +412,16 @@ class SecurityWorker(QThread):
 
             security = PDFSecurity()
             if self._mode == "encrypt":
-                kwargs = {
+                encrypt_kwargs: dict[str, object] = {
                     "input_path": self._input_path,
                     "output_path": self._output_path,
                     "user_password": self._password,
                 }
                 if self._owner_password:
-                    kwargs["owner_password"] = self._owner_password
+                    encrypt_kwargs["owner_password"] = self._owner_password
                 if self._permissions is not None:
-                    kwargs["permissions"] = self._permissions
-                result = security.encrypt(**kwargs)
+                    encrypt_kwargs["permissions"] = self._permissions
+                result = security.encrypt(**encrypt_kwargs)  # type: ignore[arg-type]
             else:
                 result = security.decrypt(
                     self._input_path,
@@ -465,6 +465,8 @@ class ImageConvertWorker(QThread):
 
             converter = PDFImageConverter()
             if self._mode == "pdf_to_images":
+                assert self._input_path is not None, "input_path obrigatório para pdf_to_images"
+                assert self._output_dir is not None, "output_dir obrigatório para pdf_to_images"
                 result = converter.pdf_to_images(
                     self._input_path,
                     self._output_dir,
@@ -472,6 +474,7 @@ class ImageConvertWorker(QThread):
                     dpi=self._dpi,
                 )
             else:
+                assert self._output_path is not None, "output_path obrigatório para images_to_pdf"
                 result = converter.images_to_pdf(
                     self._image_paths,
                     self._output_path,
@@ -518,6 +521,7 @@ class WatermarkWorker(QThread):
                     self._config,
                 )
             else:
+                assert self._image_path is not None, "image_path obrigatório para modo image"
                 result = wm.apply_image(
                     self._input_path,
                     self._output_path,

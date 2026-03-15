@@ -68,16 +68,18 @@ class PageEditor(QWidget):
 
         self._pairs_table = QTableWidget(1, 2)
         self._pairs_table.setHorizontalHeaderLabels(["Buscar", "Substituir por"])
-        self._pairs_table.horizontalHeader().setStretchLastSection(True)
-        self._pairs_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        if hh := self._pairs_table.horizontalHeader():
+            hh.setStretchLastSection(True)
+            hh.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self._pairs_table.setEditTriggers(
             QAbstractItemView.EditTrigger.DoubleClicked
             | QAbstractItemView.EditTrigger.AnyKeyPressed
             | QAbstractItemView.EditTrigger.SelectedClicked
         )
         self._pairs_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
-        self._pairs_table.verticalHeader().setDefaultSectionSize(36)
-        self._pairs_table.verticalHeader().setVisible(False)
+        if vh := self._pairs_table.verticalHeader():
+            vh.setDefaultSectionSize(36)
+            vh.setVisible(False)
         self._pairs_table.setMinimumHeight(120)
         layout.addWidget(self._pairs_table)
 

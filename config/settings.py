@@ -77,6 +77,7 @@ class Settings:
     """Singleton de configuração global da aplicação."""
 
     _instance: "Settings | None" = None
+    _initialized: bool
 
     def __new__(cls) -> "Settings":
         if cls._instance is None:

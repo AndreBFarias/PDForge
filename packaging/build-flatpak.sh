@@ -11,19 +11,19 @@ MANIFEST="$SCRIPT_DIR/flatpak/$APP_ID.yml"
 echo "Construindo pacote Flatpak..."
 
 if ! command -v flatpak-builder &> /dev/null; then
-    echo "Erro: flatpak-builder nao encontrado."
+    echo "Erro: flatpak-builder não encontrado."
     echo "Instale com: sudo apt install flatpak-builder"
     exit 1
 fi
 
 if ! command -v flatpak &> /dev/null; then
-    echo "Erro: flatpak nao encontrado."
+    echo "Erro: flatpak não encontrado."
     echo "Instale com: sudo apt install flatpak"
     exit 1
 fi
 
 if [ ! -f "$MANIFEST" ]; then
-    echo "Erro: manifesto nao encontrado: $MANIFEST"
+    echo "Erro: manifesto não encontrado: $MANIFEST"
     exit 1
 fi
 

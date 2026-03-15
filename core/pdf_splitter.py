@@ -33,7 +33,7 @@ class PDFSplitter:
                 new_doc.save(str(out_path))
                 new_doc.close()
                 result.output_files.append(out_path)
-                logger.debug("Split parte %d: paginas %d-%d -> %s", i + 1, start, end, out_path)
+                logger.debug("Split parte %d: páginas %d-%d -> %s", i + 1, start, end, out_path)
         except Exception as exc:
             logger.error("Erro no split por range: %s", exc)
             result.success = False
@@ -107,7 +107,7 @@ class PDFSplitter:
             return result
 
         try:
-            ranges = []
+            ranges: list[tuple[int, int, str]] = []
             for entry in toc:
                 level, title, page_num = entry
                 if level != 1:

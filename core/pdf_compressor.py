@@ -119,7 +119,7 @@ class PDFCompressor:
                 content_type=PageContentType.MIXED,
                 profile_used=profile,
                 success=False,
-                error=f"Perfil invalido: '{profile}'. Use: {list(COMPRESS_PROFILES.keys())}",
+                error=f"Perfil inválido: '{profile}'. Use: {list(COMPRESS_PROFILES.keys())}",
             )
 
         cfg = COMPRESS_PROFILES[profile]
@@ -151,7 +151,7 @@ class PDFCompressor:
                                 pix.height, pix.width, pix.n
                             )
                             if pix.n == 4:
-                                img_array = cv2.cvtColor(img_array, cv2.COLOR_RGBA2RGB)
+                                img_array = cv2.cvtColor(img_array, cv2.COLOR_RGBA2RGB)  # type: ignore[assignment]
                             _, jpeg_bytes = cv2.imencode(
                                 ".jpg", img_array, [cv2.IMWRITE_JPEG_QUALITY, quality]
                             )
@@ -180,7 +180,7 @@ class PDFCompressor:
             )
 
             logger.info(
-                "Compressao concluida: %.2fMB -> %.2fMB (%.1f%%) perfil=%s",
+                "Compressão concluída: %.2fMB -> %.2fMB (%.1f%%) perfil=%s",
                 original_mb,
                 compressed_mb,
                 reduction,
@@ -195,7 +195,7 @@ class PDFCompressor:
                 profile_used=profile,
             )
         except Exception as exc:
-            logger.error("Erro na compressao: %s", exc)
+            logger.error("Erro na compressão: %s", exc)
             return CompressResult(
                 output_path=output_path,
                 original_size_mb=round(original_mb, 3),

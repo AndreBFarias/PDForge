@@ -64,9 +64,9 @@ class SignatureHandler:
                             height, width, n
                         )
                         if n == 4:
-                            img_array = cv2.cvtColor(img_array, cv2.COLOR_RGBA2GRAY)
+                            img_array = cv2.cvtColor(img_array, cv2.COLOR_RGBA2GRAY)  # type: ignore[assignment]
                         elif n == 3:
-                            img_array = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
+                            img_array = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)  # type: ignore[assignment]
 
                         _, thresh = cv2.threshold(img_array, 200, 255, cv2.THRESH_BINARY_INV)
                         contours, _ = cv2.findContours(

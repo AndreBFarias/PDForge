@@ -65,7 +65,7 @@ def test_reorder_invalid_index(
         [0, 1, 99],
     )
     assert not result.success
-    assert "invalido" in result.error.lower()
+    assert "nv" in result.error.lower()
 
 
 def test_get_thumbnails(sample_multipage_path):

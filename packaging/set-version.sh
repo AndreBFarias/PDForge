@@ -2,7 +2,7 @@
 set -e
 
 if [ -z "$1" ]; then
-    echo "Uso: $0 <versao>"
+    echo "Uso: $0 <versão>"
     echo "Exemplo: $0 1.1.0"
     exit 1
 fi
@@ -10,7 +10,7 @@ fi
 VERSION="$1"
 
 if ! echo "$VERSION" | grep -qP '^\d+\.\d+\.\d+$'; then
-    echo "Erro: formato de versao invalido: $VERSION"
+    echo "Erro: formato de versão inválido: $VERSION"
     echo "Use o formato semver: X.Y.Z (ex: 1.2.3)"
     exit 1
 fi
@@ -26,12 +26,12 @@ TARGETS=(
 
 for target in "${TARGETS[@]}"; do
     if [ ! -f "$target" ]; then
-        echo "Erro: arquivo nao encontrado: $target"
+        echo "Erro: arquivo não encontrado: $target"
         exit 1
     fi
 done
 
-echo "Atualizando versao para ${VERSION}..."
+echo "Atualizando versão para ${VERSION}..."
 
 sed -i "s/^version = .*/version = \"${VERSION}\"/" "$PROJECT_DIR/pyproject.toml"
 echo "  pyproject.toml"
@@ -42,4 +42,4 @@ echo "  config/settings.py"
 sed -i "s/^Version:.*/Version: ${VERSION}/" "$SCRIPT_DIR/deb/DEBIAN/control"
 echo "  packaging/deb/DEBIAN/control"
 
-echo "Versao atualizada para ${VERSION} em ${#TARGETS[@]} arquivos."
+echo "Versão atualizada para ${VERSION} em ${#TARGETS[@]} arquivos."

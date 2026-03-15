@@ -218,7 +218,7 @@ if command -v gsettings &>/dev/null; then
     fi
 fi
 
-echo "Desinstalacao concluida."
+echo "Desinstalação concluída."
 ```
 
 ---

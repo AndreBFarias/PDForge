@@ -1,6 +1,6 @@
 # Contribuindo com o PDForge
 
-Contribuicoes sao bem-vindas. Este guia descreve o processo e as convencoes do projeto.
+Contribuições são bem-vindas. Este guia descreve o processo e as convenções do projeto.
 
 ## Processo
 
@@ -14,26 +14,26 @@ Contribuicoes sao bem-vindas. Este guia descreve o processo e as convencoes do p
 ## Padrao de Commits
 
 ```
-tipo: descricao imperativa em PT-BR com acentuacao
+tipo: descrição imperativa em PT-BR com acentuação
 
 # Tipos: feat, fix, refactor, docs, test, perf, chore
 ```
 
 Exemplos:
-- `feat: adiciona exportacao para DOCX`
-- `fix: corrige rotacao em PDFs protegidos`
-- `refactor: extrai logica de compressao para modulo separado`
+- `feat: adiciona exportação para DOCX`
+- `fix: corrige rotação em PDFs protegidos`
+- `refactor: extrai lógica de compressão para módulo separado`
 
 ## Regras
 
 - **PT-BR** em commits, logs e mensagens de interface
 - **Zero emojis** em codigo, commits e documentacao
-- **Zero mencoes a IA** — commits devem ser anonimos e limpos
-- **Type hints** em todas as funcoes publicas
+- **Zero menções a IA** — commits devem ser anônimos e limpos
+- **Type hints** em todas as funções públicas
 - **Logger**: `logging.getLogger("pdfforge.submodulo")` — nunca `print()`
 - **Assinatura filosofica** como comentario final em cada arquivo Python
-- **800 linhas** maximo por arquivo — se ultrapassar, extraia para modulo separado
-- **Dataclasses** para resultados de operacoes com `success: bool` e `error: str`
+- **800 linhas** máximo por arquivo — se ultrapassar, extraia para módulo separado
+- **Dataclasses** para resultados de operações com `success: bool` e `error: str`
 - **Workers**: QThread com sinais `finished(object)`, `progress(int, int, str)`, `error(str)`
 
 ## Testes
@@ -47,8 +47,8 @@ Use o `conftest.py` existente para fixtures de PDFs de teste.
 
 ## Estrutura de Branches
 
-- `main`: releases estaveis
-- `develop`: integracao de features
+- `main`: releases estáveis
+- `develop`: integração de features
 
 ## Ambiente de Desenvolvimento
 
@@ -58,11 +58,11 @@ cd PDForge
 make dev
 ```
 
-## Checklist Pre-Commit
+## Checklist Pré-Commit
 
 - [ ] Testes passando
-- [ ] Zero emojis no codigo
-- [ ] Zero mencoes a IA
-- [ ] Commit message em PT-BR com acentuacao
-- [ ] Assinatura filosofica presente
-- [ ] Documentacao atualizada se necessario
+- [ ] Zero emojis no código
+- [ ] Zero menções a IA
+- [ ] Commit message em PT-BR com acentuação
+- [ ] Assinatura filosófica presente
+- [ ] Documentação atualizada se necessário

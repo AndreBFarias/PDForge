@@ -61,6 +61,8 @@ class DragDropPDFList(QListWidget):
         entries = []
         for i in range(self.count()):
             item = self.item(i)
+            if item is None:
+                continue
             path = item.data(Qt.ItemDataRole.UserRole)
             if path:
                 entries.append(MergeEntry(path=path))

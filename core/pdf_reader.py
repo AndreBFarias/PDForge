@@ -89,14 +89,14 @@ class PDFReader:
 
     def get_page_text(self, page_num: int) -> str:
         """Retorna texto extraído de uma página (0-indexed)."""
-        return self._doc[page_num].get_text()
+        return self._doc[page_num].get_text()  # type: ignore[no-any-return]
 
     def get_page_text_dict(self, page_num: int) -> dict:
         """
         Retorna estrutura completa de spans com atributos tipográficos.
         Formato: {"blocks": [{"lines": [{"spans": [{"text", "font", "size", ...}]}]}]}
         """
-        return self._doc[page_num].get_text("dict")
+        return self._doc[page_num].get_text("dict")  # type: ignore[no-any-return]
 
     def get_page_image(self, page_num: int, scale: float = OCR_IMAGE_SCALE) -> bytes:
         """
@@ -106,7 +106,7 @@ class PDFReader:
         page = self._doc[page_num]
         mat = fitz.Matrix(scale, scale)
         pix = page.get_pixmap(matrix=mat, alpha=False)
-        return pix.tobytes("png")
+        return pix.tobytes("png")  # type: ignore[no-any-return]
 
     def search_text(self, query: str, case_sensitive: bool = False) -> dict[int, list[fitz.Rect]]:
         """

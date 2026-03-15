@@ -141,7 +141,7 @@ class PageMerge(QWidget):
             result.output_path.stat().st_size / (1024 * 1024) if result.output_path.exists() else 0
         )
         self._lbl_status.setText(
-            f"Concluido: {result.total_pages} paginas,"
+            f"Concluído: {result.total_pages} páginas,"
             f" {size_mb:.2f} MB -> {result.output_path.name}"
         )
         self.pdf_changed.emit(result.output_path)

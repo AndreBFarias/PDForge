@@ -143,7 +143,8 @@ class PDFPageViewer(QWidget):
             page = self._doc[self._current_page]
             if self._fit_to_width:
                 page_width = page.rect.width
-                viewport_width = self._scroll.viewport().width()
+                vp = self._scroll.viewport()
+                viewport_width = vp.width() if vp is not None else 0
                 if viewport_width > 0 and page_width > 0:
                     self._scale = viewport_width / page_width
             mat = fitz.Matrix(self._scale, self._scale)

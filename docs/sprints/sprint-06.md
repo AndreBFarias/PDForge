@@ -131,7 +131,7 @@ if self._operation_name.startswith("rotate_"):
     def _rotate_op(doc: fitz.Document, output_path: Path) -> str:
         from core.pdf_rotator import PDFRotator
         result = PDFRotator().rotate_all(doc, angle, output_path)
-        return f"{result.pages_rotated} paginas rotacionadas {angle}°"
+        return f"{result.pages_rotated} páginas rotacionadas {angle}°"
     return _rotate_op
 ```
 

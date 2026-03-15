@@ -5,7 +5,7 @@
 [![Python](https://img.shields.io/badge/python-3.10+-green.svg)](https://www.python.org/)
 [![PyQt6](https://img.shields.io/badge/PyQt6-6.x-green.svg)](https://www.riverbankcomputing.com/software/pyqt/)
 [![Estrelas](https://img.shields.io/github/stars/AndreBFarias/PDForge.svg?style=social)](https://github.com/AndreBFarias/PDForge/stargazers)
-[![Contribuicoes](https://img.shields.io/badge/contribuicoes-bem--vindas-brightgreen.svg)](https://github.com/AndreBFarias/PDForge/issues)
+[![Contribuições](https://img.shields.io/badge/contribui%C3%A7%C3%B5es-bem--vindas-brightgreen.svg)](https://github.com/AndreBFarias/PDForge/issues)
 
 <h1>PDForge</h1>
 
@@ -15,7 +15,7 @@
 
 ---
 
-### Descricao
+### Descrição
 
 Editor e manipulador de PDF para Linux com interface PyQt6, tema Dracula, OCR com aceleracao GPU (CUDA), classificacao de documentos por ML e processamento em lote.
 
@@ -25,21 +25,21 @@ Editor e manipulador de PDF para Linux com interface PyQt6, tema Dracula, OCR co
 
 | Categoria | Funcionalidade |
 |-----------|---------------|
-| **Edicao** | Busca/substituicao de texto, exportacao DOCX, metadados |
-| **Mesclagem** | Combinar multiplos PDFs com drag-and-drop e selecao de paginas |
-| **Divisao** | Por intervalo, tamanho maximo e bookmarks |
-| **Compressao** | Perfis leve/medio/agressivo com analise de conteudo (OpenCV) |
-| **Rotacao** | Paginas individuais ou em lote (90, 180, 270 graus) |
-| **Assinaturas** | Deteccao por visao computacional, extracao e reinsercao |
-| **Classificacao** | Heuristica PT-BR + modelo ML (joblib) |
-| **OCR** | EasyOCR com CUDA, fallback automatico para CPU |
-| **Lote** | Processamento em massa com relatorio detalhado |
-| **Analise** | Informacoes por pagina, deteccao de fontes, preview inline |
+| **Edição** | Busca/substituição de texto, exportação DOCX, metadados |
+| **Mesclagem** | Combinar múltiplos PDFs com drag-and-drop e seleção de páginas |
+| **Divisão** | Por intervalo, tamanho máximo e bookmarks |
+| **Compressão** | Perfis leve/médio/agressivo com análise de conteúdo (OpenCV) |
+| **Rotação** | Páginas individuais ou em lote (90, 180, 270 graus) |
+| **Assinaturas** | Detecção por visão computacional, extração e reinserção |
+| **Classificação** | Heurística PT-BR + modelo ML (joblib) |
+| **OCR** | EasyOCR com CUDA, fallback automático para CPU |
+| **Lote** | Processamento em massa com relatório detalhado |
+| **Análise** | Informações por página, detecção de fontes, preview inline |
 | **Deploy** | AppImage, .deb, Flatpak |
 
 ---
 
-### Instalacao
+### Instalação
 
 #### AppImage (Recomendado)
 
@@ -77,7 +77,7 @@ chmod +x install.sh
 
 ### Requisitos
 
-**Obrigatorios:**
+**Obrigatórios:**
 - Python 3.10+
 - PyQt6
 - PyMuPDF (fitz)
@@ -89,9 +89,9 @@ chmod +x install.sh
 - PyTorch com suporte CUDA
 
 **Opcionais:**
-- OpenCV (compressao avancada, deteccao de assinaturas)
-- joblib (classificacao ML)
-- pdf2docx (exportacao DOCX)
+- OpenCV (compressão avançada, detecção de assinaturas)
+- joblib (classificação ML)
+- pdf2docx (exportação DOCX)
 
 ---
 
@@ -121,16 +121,16 @@ PDFFORGE_DEBUG=1 pdfforge
 ```
 PDForge/
   main.py              # Entry point CLI (click)
-  config/              # Configuracoes e constantes
-  core/                # Logica de negocio (sem dependencia de UI)
+  config/              # Configurações e constantes
+  core/                # Lógica de negócio (sem dependência de UI)
   ui/                  # Interface PyQt6 com tema Dracula
     screens/           # 9 telas funcionais
     widgets/           # Componentes customizados
   utils/               # Helpers (logging, GPU, fontes)
   tests/               # Testes (pytest)
   packaging/           # Scripts de build (.deb, AppImage, Flatpak)
-  assets/              # Icones e imagens
-  docs/                # Documentacao
+  assets/              # Ícones e imagens
+  docs/                # Documentação
 ```
 
 ---
@@ -145,7 +145,7 @@ PDForge/
 
 ### Contribuindo
 
-Contribuicoes sao bem-vindas. Veja [CONTRIBUTING.md](CONTRIBUTING.md) para detalhes.
+Contribuições são bem-vindas. Veja [CONTRIBUTING.md](CONTRIBUTING.md) para detalhes.
 
 ---
 
