@@ -39,7 +39,7 @@ PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.v
 DEPS_DIR="$APPDIR/usr/lib/python${PYTHON_VERSION}/site-packages"
 mkdir -p "$DEPS_DIR"
 
-pip install --target="$DEPS_DIR" -r "$PROJECT_DIR/requirements.txt" --quiet
+pip install --target="$DEPS_DIR" -r "$PROJECT_DIR/requirements-appimage.txt" --quiet
 
 APPIMAGETOOL="$SCRIPT_DIR/appimagetool"
 if [ ! -f "$APPIMAGETOOL" ]; then
