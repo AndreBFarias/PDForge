@@ -11,7 +11,6 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QSizePolicy,
     QTableWidget,
-    QTableWidgetItem,
     QVBoxLayout,
     QWidget,
 )
@@ -70,9 +69,7 @@ class PageEditor(QWidget):
         self._pairs_table = QTableWidget(1, 2)
         self._pairs_table.setHorizontalHeaderLabels(["Buscar", "Substituir por"])
         self._pairs_table.horizontalHeader().setStretchLastSection(True)
-        self._pairs_table.horizontalHeader().setSectionResizeMode(
-            0, QHeaderView.ResizeMode.Stretch
-        )
+        self._pairs_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self._pairs_table.setEditTriggers(
             QAbstractItemView.EditTrigger.DoubleClicked
             | QAbstractItemView.EditTrigger.AnyKeyPressed
@@ -163,9 +160,7 @@ class PageEditor(QWidget):
         self._pairs_table.insertRow(self._pairs_table.rowCount())
 
     def _remove_pair_row(self) -> None:
-        rows = sorted(
-            {idx.row() for idx in self._pairs_table.selectedIndexes()}, reverse=True
-        )
+        rows = sorted({idx.row() for idx in self._pairs_table.selectedIndexes()}, reverse=True)
         for row in rows:
             self._pairs_table.removeRow(row)
         if self._pairs_table.rowCount() == 0:
@@ -245,7 +240,8 @@ class PageEditor(QWidget):
             f"color: {DraculaTheme.GREEN}; font-weight: bold; margin-top: 8px;"
         )
         self._lbl_result.setText(
-            f"{result.total_replacements} substituição(ões) em {len(result.pages_affected)} página(s)"
+            f"{result.total_replacements} substituição(ões)"
+            f" em {len(result.pages_affected)} página(s)"
             + (f" [{pages}]" if pages else "")
             + f"\nSalvo em: {result.output_path.name}"
         )

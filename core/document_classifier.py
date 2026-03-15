@@ -37,6 +37,7 @@ class DocumentClassifier:
         if model_path.exists():
             try:
                 import joblib
+
                 model = joblib.load(str(model_path))
                 prediction = model.predict([text])[0]
                 probabilities = model.predict_proba([text])[0]

@@ -47,6 +47,7 @@ def main(path: str | None, no_gpu: bool, debug: bool, batch: bool) -> None:
 def _run_gui(path: str | None, use_gpu: bool) -> None:
     from PyQt6.QtGui import QIcon
     from PyQt6.QtWidgets import QApplication
+
     from ui.main_window import MainWindow
 
     initial_pdf = None
@@ -98,9 +99,12 @@ def _run_batch_cli(path: str | None, no_gpu: bool, logger) -> None:
 
     for result in report.results:
         status = "OK  " if result.success else "ERRO"
-        click.echo(f"  {status} | {result.path.name:<40} | {result.duration_s:.2f}s | {result.message}")
+        click.echo(
+            f"  {status} | {result.path.name:<40} | {result.duration_s:.2f}s | {result.message}"
+        )
 
 
-# "A mente que se abre a uma nova ideia jamais voltará ao seu tamanho original." — Oliver Wendell Holmes
+# "A mente que se abre a uma nova ideia jamais voltará ao seu tamanho original."
+# — Oliver Wendell Holmes
 if __name__ == "__main__":
     main()

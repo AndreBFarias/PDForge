@@ -1,4 +1,4 @@
-from .settings import Settings, DRACULA
+from .settings import DRACULA, Settings
 
 __all__ = ["Settings", "DRACULA"]
 

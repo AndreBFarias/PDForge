@@ -1,6 +1,5 @@
 import io
 import logging
-import math
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -10,6 +9,7 @@ logger = logging.getLogger("pdfforge.watermark")
 
 try:
     from PIL import Image, ImageDraw, ImageFont
+
     PIL_AVAILABLE = True
 except ImportError:
     PIL_AVAILABLE = False
@@ -63,14 +63,19 @@ class PDFWatermark:
                     config,
                 )
                 page.insert_image(
-                    page.rect, stream=overlay, overlay=True,
+                    page.rect,
+                    stream=overlay,
+                    overlay=True,
                 )
 
             output_path.parent.mkdir(
-                parents=True, exist_ok=True,
+                parents=True,
+                exist_ok=True,
             )
             doc.save(
-                str(output_path), garbage=4, deflate=True,
+                str(output_path),
+                garbage=4,
+                deflate=True,
             )
             pages = len(doc)
             doc.close()
@@ -84,10 +89,12 @@ class PDFWatermark:
             )
         except Exception as exc:
             logger.error(
-                "Erro ao aplicar marca d'água: %s", exc,
+                "Erro ao aplicar marca d'água: %s",
+                exc,
             )
             return WatermarkResult(
-                success=False, error=str(exc),
+                success=False,
+                error=str(exc),
             )
 
     def apply_image(
@@ -107,9 +114,7 @@ class PDFWatermark:
         if not image_path.exists():
             return WatermarkResult(
                 success=False,
-                error=(
-                    f"Imagem não encontrada: {image_path}"
-                ),
+                error=(f"Imagem não encontrada: {image_path}"),
             )
 
         try:
@@ -130,16 +135,18 @@ class PDFWatermark:
                 )
 
             output_path.parent.mkdir(
-                parents=True, exist_ok=True,
+                parents=True,
+                exist_ok=True,
             )
             doc.save(
-                str(output_path), garbage=4, deflate=True,
+                str(output_path),
+                garbage=4,
+                deflate=True,
             )
             pages = len(doc)
             doc.close()
             logger.info(
-                "Marca d'água de imagem aplicada:"
-                " %d páginas",
+                "Marca d'água de imagem aplicada: %d páginas",
                 pages,
             )
             return WatermarkResult(
@@ -148,12 +155,12 @@ class PDFWatermark:
             )
         except Exception as exc:
             logger.error(
-                "Erro ao aplicar marca d'água de imagem:"
-                " %s",
+                "Erro ao aplicar marca d'água de imagem: %s",
                 exc,
             )
             return WatermarkResult(
-                success=False, error=str(exc),
+                success=False,
+                error=str(exc),
             )
 
     def _create_text_overlay(
@@ -168,20 +175,25 @@ class PDFWatermark:
 
         if config.position == "tile":
             return self._create_tile_overlay(
-                text, width, height, config, color,
+                text,
+                width,
+                height,
+                config,
+                color,
             )
 
         img = Image.new(
-            "RGBA", (width, height), (0, 0, 0, 0),
+            "RGBA",
+            (width, height),
+            (0, 0, 0, 0),
         )
         draw = ImageDraw.Draw(img)
         try:
             font = ImageFont.truetype(
-                "/usr/share/fonts/truetype"
-                "/dejavu/DejaVuSans.ttf",
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
                 config.font_size,
             )
-        except (OSError, IOError):
+        except OSError:
             font = ImageFont.load_default()
 
         bbox = draw.textbbox((0, 0), text, font=font)
@@ -198,7 +210,10 @@ class PDFWatermark:
             )
             txt_draw = ImageDraw.Draw(txt_img)
             txt_draw.text(
-                (10, 10), text, fill=color, font=font,
+                (10, 10),
+                text,
+                fill=color,
+                font=font,
             )
             rotated = txt_img.rotate(
                 -config.rotation,
@@ -210,7 +225,10 @@ class PDFWatermark:
             img.paste(rotated, (rx, ry), rotated)
         else:
             draw.text(
-                (x, y), text, fill=color, font=font,
+                (x, y),
+                text,
+                fill=color,
+                font=font,
             )
 
         buf = io.BytesIO()
@@ -226,16 +244,17 @@ class PDFWatermark:
         color: tuple,
     ) -> bytes:
         img = Image.new(
-            "RGBA", (width, height), (0, 0, 0, 0),
+            "RGBA",
+            (width, height),
+            (0, 0, 0, 0),
         )
         draw = ImageDraw.Draw(img)
         try:
             font = ImageFont.truetype(
-                "/usr/share/fonts/truetype"
-                "/dejavu/DejaVuSans.ttf",
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
                 config.font_size,
             )
-        except (OSError, IOError):
+        except OSError:
             font = ImageFont.load_default()
 
         bbox = draw.textbbox((0, 0), text, font=font)
@@ -246,7 +265,9 @@ class PDFWatermark:
 
         for y in range(-height, height * 2, step_y):
             for x in range(
-                -width, width * 2, step_x,
+                -width,
+                width * 2,
+                step_x,
             ):
                 txt_img = Image.new(
                     "RGBA",
@@ -286,7 +307,8 @@ class PDFWatermark:
         new_w = int(wm_img.width * scale)
         new_h = int(wm_img.height * scale)
         wm_img = wm_img.resize(
-            (new_w, new_h), Image.LANCZOS,
+            (new_w, new_h),
+            Image.LANCZOS,
         )
 
         alpha = wm_img.split()[3]
@@ -296,7 +318,9 @@ class PDFWatermark:
         wm_img.putalpha(alpha)
 
         canvas = Image.new(
-            "RGBA", (width, height), (0, 0, 0, 0),
+            "RGBA",
+            (width, height),
+            (0, 0, 0, 0),
         )
         x = (width - new_w) // 2
         y = (height - new_h) // 2

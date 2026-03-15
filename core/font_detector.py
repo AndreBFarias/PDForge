@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 import fitz
 
-from utils.font_matcher import FontMatcher, FontInfo
+from utils.font_matcher import FontInfo, FontMatcher
 
 logger = logging.getLogger("pdfforge.font_detector")
 
@@ -72,12 +72,14 @@ class FontDetector:
         result = []
         for font_name, data in raw.items():
             info = self._matcher.match(font_name)
-            result.append(FontUsage(
-                info=info,
-                occurrences=data["count"],
-                pages=sorted(data["pages"]),
-                sizes=data["sizes"],
-            ))
+            result.append(
+                FontUsage(
+                    info=info,
+                    occurrences=data["count"],
+                    pages=sorted(data["pages"]),
+                    sizes=data["sizes"],
+                )
+            )
         result.sort(key=lambda u: u.occurrences, reverse=True)
         logger.info("Fontes detectadas: %d tipos únicos", len(result))
         return result

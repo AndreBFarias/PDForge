@@ -1,18 +1,18 @@
 import logging
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 
 import fitz  # pymupdf
 
-from config.settings import OCR_TEXT_MIN_CHARS, OCR_IMAGE_SCALE
-from utils.file_utils import validate_pdf_path, human_size
+from config.settings import OCR_IMAGE_SCALE, OCR_TEXT_MIN_CHARS
+from utils.file_utils import human_size, validate_pdf_path
 
 logger = logging.getLogger("pdfforge.reader")
 
 
 @dataclass
 class PageInfo:
-    number: int          # 0-indexed
+    number: int  # 0-indexed
     width: float
     height: float
     text_length: int

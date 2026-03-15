@@ -1,4 +1,5 @@
 import fitz
+
 from core.document_classifier import DocumentClassifier
 
 
@@ -15,7 +16,9 @@ def test_classify_heuristic_fallback(sample_pdf_path):
 def test_classify_contrato():
     doc = fitz.open()
     page = doc.new_page()
-    page.insert_text((50, 100), "cláusula primeira — objeto do contrato entre contratante e contratado.")
+    page.insert_text(
+        (50, 100), "cláusula primeira — objeto do contrato entre contratante e contratado."
+    )
     classifier = DocumentClassifier()
     result = classifier.classify(doc)
     doc.close()

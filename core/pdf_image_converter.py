@@ -30,10 +30,7 @@ class PDFImageConverter:
         result = ConvertResult()
         try:
             doc = fitz.open(str(input_path))
-            indices = (
-                pages if pages is not None
-                else list(range(len(doc)))
-            )
+            indices = pages if pages is not None else list(range(len(doc)))
             scale = dpi / 72.0
             mat = fitz.Matrix(scale, scale)
 
@@ -42,13 +39,11 @@ class PDFImageConverter:
                     continue
                 page = doc[page_num]
                 pix = page.get_pixmap(
-                    matrix=mat, alpha=False,
+                    matrix=mat,
+                    alpha=False,
                 )
                 ext = fmt.lower()
-                out_file = (
-                    output_dir
-                    / f"pagina_{page_num + 1:03d}.{ext}"
-                )
+                out_file = output_dir / f"pagina_{page_num + 1:03d}.{ext}"
                 if ext == "jpg" or ext == "jpeg":
                     pix.save(str(out_file), output="jpeg")
                 else:
@@ -59,11 +54,14 @@ class PDFImageConverter:
             doc.close()
             logger.info(
                 "PDF convertido para %d imagens (%s, %d DPI)",
-                result.total_pages, fmt, dpi,
+                result.total_pages,
+                fmt,
+                dpi,
             )
         except Exception as exc:
             logger.error(
-                "Erro na conversao PDF->imagens: %s", exc,
+                "Erro na conversao PDF->imagens: %s",
+                exc,
             )
             result.success = False
             result.error = str(exc)
@@ -82,7 +80,8 @@ class PDFImageConverter:
 
         try:
             output_path.parent.mkdir(
-                parents=True, exist_ok=True,
+                parents=True,
+                exist_ok=True,
             )
             doc = fitz.open()
 
@@ -96,7 +95,8 @@ class PDFImageConverter:
                     height=rect.height,
                 )
                 page.insert_image(
-                    page.rect, filename=str(img_path),
+                    page.rect,
+                    filename=str(img_path),
                 )
                 result.output_paths.append(img_path)
 
@@ -105,11 +105,13 @@ class PDFImageConverter:
             doc.close()
             logger.info(
                 "PDF criado com %d imagens: %s",
-                result.total_pages, output_path.name,
+                result.total_pages,
+                output_path.name,
             )
         except Exception as exc:
             logger.error(
-                "Erro na conversao imagens->PDF: %s", exc,
+                "Erro na conversao imagens->PDF: %s",
+                exc,
             )
             result.success = False
             result.error = str(exc)

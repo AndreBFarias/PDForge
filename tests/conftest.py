@@ -1,6 +1,7 @@
-import pytest
-import fitz
 from pathlib import Path
+
+import fitz
+import pytest
 
 
 @pytest.fixture(scope="session")

@@ -1,7 +1,7 @@
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
 
 import fitz
 
@@ -50,6 +50,7 @@ class OCREngine:
         if self._reader is None:
             try:
                 import easyocr
+
                 stats = self._gpu_monitor.get_stats()
                 if self._use_gpu and stats.vram_free_mb < 1500:
                     logger.warning(

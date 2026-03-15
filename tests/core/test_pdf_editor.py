@@ -1,5 +1,5 @@
-from pathlib import Path
 import fitz
+
 from core.pdf_editor import PDFEditor
 
 
@@ -41,9 +41,7 @@ def test_replace_case_sensitive(tmp_output_dir):
     page.insert_text((50, 100), "Python python PYTHON", fontsize=12)
     output = tmp_output_dir / "case_replace.pdf"
     editor = PDFEditor()
-    result = editor.replace_text(
-        doc, [("Python", "Java")], output, case_sensitive=True
-    )
+    editor.replace_text(doc, [("Python", "Java")], output, case_sensitive=True)
     doc.close()
     assert output.exists()
 
@@ -52,8 +50,6 @@ def test_replace_no_match(sample_pdf_path, tmp_output_dir):
     doc = fitz.open(str(sample_pdf_path))
     editor = PDFEditor()
     output = tmp_output_dir / "no_match.pdf"
-    result = editor.replace_text(
-        doc, [("INEXISTENTE_XYZ", "Nada")], output, case_sensitive=False
-    )
+    result = editor.replace_text(doc, [("INEXISTENTE_XYZ", "Nada")], output, case_sensitive=False)
     doc.close()
     assert result.total_replacements == 0

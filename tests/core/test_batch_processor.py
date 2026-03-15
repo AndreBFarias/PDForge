@@ -66,7 +66,7 @@ def test_batch_with_progress(sample_pdf_path, tmp_output_dir):
     def on_progress(cur: int, total: int, name: str) -> None:
         progress_calls.append((cur, total, name))
 
-    report = processor.run(
+    processor.run(
         input_dir=sample_pdf_path.parent,
         operation=_dummy_operation,
         file_list=[sample_pdf_path],

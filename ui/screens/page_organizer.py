@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from PyQt6.QtCore import Qt, QByteArray
+from PyQt6.QtCore import QByteArray, Qt
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtWidgets import (
     QGridLayout,
@@ -26,7 +26,9 @@ class _ThumbnailItem(QWidget):
     """Widget individual de thumbnail com número da página."""
 
     def __init__(
-        self, page_num: int, png_bytes: bytes,
+        self,
+        page_num: int,
+        png_bytes: bytes,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
@@ -41,7 +43,8 @@ class _ThumbnailItem(QWidget):
         img = QImage()
         img.loadFromData(QByteArray(png_bytes))
         pix = QPixmap.fromImage(img).scaledToWidth(
-            140, Qt.TransformationMode.SmoothTransformation,
+            140,
+            Qt.TransformationMode.SmoothTransformation,
         )
         self._img_label.setPixmap(pix)
         self._img_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -72,7 +75,9 @@ class _ThumbnailItem(QWidget):
 
 class PageOrganizer(QWidget):
     def __init__(
-        self, use_gpu: bool = True, parent: QWidget | None = None,
+        self,
+        use_gpu: bool = True,
+        parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._use_gpu = use_gpu
@@ -96,7 +101,8 @@ class PageOrganizer(QWidget):
         )
         layout.addWidget(lbl)
         self._btn_in = FilePathButton(
-            "Selecionar PDF  ", mode="pdf",
+            "Selecionar PDF  ",
+            mode="pdf",
         )
         self._btn_in.path_selected.connect(self._load_thumbnails)
         layout.addWidget(self._btn_in)
@@ -146,7 +152,8 @@ class PageOrganizer(QWidget):
         )
         layout.addWidget(lbl_out)
         self._btn_out = FilePathButton(
-            "Selecionar arquivo de saída (.pdf)  ", mode="save",
+            "Selecionar arquivo de saída (.pdf)  ",
+            mode="save",
         )
         layout.addWidget(self._btn_out)
 
@@ -166,7 +173,8 @@ class PageOrganizer(QWidget):
         self._btn_save.setObjectName("actionBtn")
         self._btn_save.setCursor(Qt.CursorShape.PointingHandCursor)
         self._btn_save.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Fixed,
         )
         self._btn_save.clicked.connect(self._save)
         layout.addWidget(self._btn_save)
@@ -174,7 +182,9 @@ class PageOrganizer(QWidget):
         self._toast = Toast(self)
 
     def refresh_state(
-        self, pdf_path: Path | None, output_dir: Path | None,
+        self,
+        pdf_path: Path | None,
+        output_dir: Path | None,
     ) -> None:
         if pdf_path:
             self._btn_in.set_path(pdf_path)
@@ -191,6 +201,7 @@ class PageOrganizer(QWidget):
 
         try:
             from core.pdf_page_organizer import PDFPageOrganizer
+
             organizer = PDFPageOrganizer()
             thumbs = organizer.get_page_thumbnails(path)
 
@@ -211,9 +222,7 @@ class PageOrganizer(QWidget):
             self._lbl_status.setText(f"Erro: {exc}")
 
     def _get_selected_indices(self) -> list[int]:
-        return [
-            i for i, t in enumerate(self._thumbnails) if t.selected
-        ]
+        return [i for i, t in enumerate(self._thumbnails) if t.selected]
 
     def _refresh_grid(self) -> None:
         while self._grid_layout.count():
@@ -233,10 +242,12 @@ class PageOrganizer(QWidget):
         for idx in selected:
             if idx > 0:
                 self._thumbnails[idx], self._thumbnails[idx - 1] = (
-                    self._thumbnails[idx - 1], self._thumbnails[idx],
+                    self._thumbnails[idx - 1],
+                    self._thumbnails[idx],
                 )
                 self._page_order[idx], self._page_order[idx - 1] = (
-                    self._page_order[idx - 1], self._page_order[idx],
+                    self._page_order[idx - 1],
+                    self._page_order[idx],
                 )
         self._refresh_grid()
 
@@ -247,10 +258,12 @@ class PageOrganizer(QWidget):
         for idx in reversed(selected):
             if idx < len(self._thumbnails) - 1:
                 self._thumbnails[idx], self._thumbnails[idx + 1] = (
-                    self._thumbnails[idx + 1], self._thumbnails[idx],
+                    self._thumbnails[idx + 1],
+                    self._thumbnails[idx],
                 )
                 self._page_order[idx], self._page_order[idx + 1] = (
-                    self._page_order[idx + 1], self._page_order[idx],
+                    self._page_order[idx + 1],
+                    self._page_order[idx],
                 )
         self._refresh_grid()
 

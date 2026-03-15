@@ -1,8 +1,6 @@
-from pathlib import Path
-
 import fitz
 
-from core.metadata import PDFMetadata, Metadata
+from core.metadata import Metadata, PDFMetadata
 
 
 def test_read_metadata(sample_pdf_path):

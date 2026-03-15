@@ -1,7 +1,7 @@
 import json
 import logging
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from dataclasses import dataclass, field, asdict
 
 logger = logging.getLogger("pdfforge.settings")
 
@@ -27,18 +27,18 @@ CONFIG_FILE = APP_DIR / "config.json"
 CACHE_DIR = APP_DIR / "cache"
 
 # Limites de hardware (RTX 3050 4GB VRAM)
-GPU_VRAM_LIMIT_GB = 3.5       # Margem de segurança de 0.5GB
-OCR_BATCH_MAX_PAGES = 2       # Máximo de páginas OCR simultâneas
-OCR_IMAGE_SCALE = 2.0         # Fator de escala para rasterização de páginas
+GPU_VRAM_LIMIT_GB = 3.5  # Margem de segurança de 0.5GB
+OCR_BATCH_MAX_PAGES = 2  # Máximo de páginas OCR simultâneas
+OCR_IMAGE_SCALE = 2.0  # Fator de escala para rasterização de páginas
 
 # Limiares de detecção
-OCR_TEXT_MIN_CHARS = 10       # Abaixo disso, página é tratada como imagem
+OCR_TEXT_MIN_CHARS = 10  # Abaixo disso, página é tratada como imagem
 PDF_MAX_PREVIEW_SIZE_MB = 50  # PDFs maiores que isso: preview desabilitado
 
 # Logging
 LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
-LOG_BACKUP_COUNT = 7          # Manter 7 dias de logs
+LOG_BACKUP_COUNT = 7  # Manter 7 dias de logs
 
 APP_VERSION = "1.1.0"
 APP_NAME = "PDForge"

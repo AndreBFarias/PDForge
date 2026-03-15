@@ -147,9 +147,13 @@ class PageSignature(QWidget):
 
         try:
             import fitz
+
             from core.signature_handler import SignatureHandler
+
             doc = fitz.open(str(pdf))
-            SignatureHandler().extract_signature(doc, region, out_path, scale=Settings().SIGNATURE_EXTRACT_SCALE)
+            SignatureHandler().extract_signature(
+                doc, region, out_path, scale=Settings().SIGNATURE_EXTRACT_SCALE
+            )
             doc.close()
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.GREEN};")
             self._lbl_status.setText(f"Extraida em: {out_path}")
@@ -181,9 +185,7 @@ class PageSignature(QWidget):
         self._btn_reinsert.setEnabled(False)
         self._btn_reinsert.setText("Reinserindo...")
 
-        self._worker = ReinsertWorker(
-            pdf_path=pdf, region=region, image_path=img, output_path=out
-        )
+        self._worker = ReinsertWorker(pdf_path=pdf, region=region, image_path=img, output_path=out)
         self._worker.finished.connect(self._on_reinsert_finished)
         self._worker.error.connect(self._on_error)
         self._worker.start()

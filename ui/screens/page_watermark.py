@@ -34,7 +34,9 @@ _POSITION_MAP = {
 
 class PageWatermark(QWidget):
     def __init__(
-        self, use_gpu: bool = True, parent: QWidget | None = None,
+        self,
+        use_gpu: bool = True,
+        parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._use_gpu = use_gpu
@@ -81,7 +83,8 @@ class PageWatermark(QWidget):
         )
         layout.addWidget(lbl_in)
         self._txt_btn_in = FilePathButton(
-            "Selecionar PDF  ", mode="pdf",
+            "Selecionar PDF  ",
+            mode="pdf",
         )
         layout.addWidget(self._txt_btn_in)
 
@@ -91,7 +94,8 @@ class PageWatermark(QWidget):
         )
         layout.addWidget(lbl_out)
         self._txt_btn_out = FilePathButton(
-            "Selecionar arquivo de saída (.pdf)  ", mode="save",
+            "Selecionar arquivo de saída (.pdf)  ",
+            mode="save",
         )
         layout.addWidget(self._txt_btn_out)
 
@@ -157,7 +161,8 @@ class PageWatermark(QWidget):
         btn.setObjectName("actionBtn")
         btn.setCursor(Qt.CursorShape.PointingHandCursor)
         btn.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Fixed,
         )
         btn.clicked.connect(self._apply_text)
         layout.addWidget(btn)
@@ -177,7 +182,8 @@ class PageWatermark(QWidget):
         )
         layout.addWidget(lbl_in)
         self._img_btn_in = FilePathButton(
-            "Selecionar PDF  ", mode="pdf",
+            "Selecionar PDF  ",
+            mode="pdf",
         )
         layout.addWidget(self._img_btn_in)
 
@@ -187,7 +193,8 @@ class PageWatermark(QWidget):
         )
         layout.addWidget(lbl_img)
         self._img_btn_img = FilePathButton(
-            "Selecionar imagem  ", mode="image",
+            "Selecionar imagem  ",
+            mode="image",
         )
         layout.addWidget(self._img_btn_img)
 
@@ -197,7 +204,8 @@ class PageWatermark(QWidget):
         )
         layout.addWidget(lbl_out)
         self._img_btn_out = FilePathButton(
-            "Selecionar arquivo de saída (.pdf)  ", mode="save",
+            "Selecionar arquivo de saída (.pdf)  ",
+            mode="save",
         )
         layout.addWidget(self._img_btn_out)
 
@@ -231,7 +239,8 @@ class PageWatermark(QWidget):
         btn.setObjectName("actionBtn")
         btn.setCursor(Qt.CursorShape.PointingHandCursor)
         btn.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed,
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Fixed,
         )
         btn.clicked.connect(self._apply_image)
         layout.addWidget(btn)
@@ -241,7 +250,9 @@ class PageWatermark(QWidget):
         return tab
 
     def refresh_state(
-        self, pdf_path: Path | None, output_dir: Path | None,
+        self,
+        pdf_path: Path | None,
+        output_dir: Path | None,
     ) -> None:
         if pdf_path:
             self._txt_btn_in.set_path(pdf_path)
@@ -249,8 +260,11 @@ class PageWatermark(QWidget):
 
     def _pick_color(self) -> None:
         from PyQt6.QtGui import QColor
+
         color = QColorDialog.getColor(
-            QColor(*self._color), self, "Cor da marca d'água",
+            QColor(*self._color),
+            self,
+            "Cor da marca d'água",
         )
         if color.isValid():
             self._color = (color.red(), color.green(), color.blue())
@@ -273,6 +287,7 @@ class PageWatermark(QWidget):
             return
 
         from core.pdf_watermark import WatermarkConfig
+
         config = WatermarkConfig(
             text=text,
             font_size=self._txt_fontsize.value(),

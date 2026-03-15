@@ -8,10 +8,10 @@ from core.batch_processor import BatchProcessor
 from core.document_classifier import ClassificationResult, DocumentClassifier
 from core.metadata import PDFMetadata
 from core.ocr_engine import OCREngine
-from core.pdf_compressor import CompressResult, PDFCompressor
+from core.pdf_compressor import PDFCompressor
 from core.pdf_editor import PDFEditor
-from core.pdf_merger import MergeEntry, MergeResult, PDFMerger
-from core.pdf_splitter import PDFSplitter, SplitResult
+from core.pdf_merger import MergeEntry, PDFMerger
+from core.pdf_splitter import PDFSplitter
 from core.signature_handler import SignatureHandler, SignatureRegion
 
 logger = logging.getLogger("pdfforge.workers")
@@ -70,6 +70,7 @@ class DocxWorker(QThread):
     def run(self) -> None:
         try:
             from pdf2docx import Converter  # importação lazy — graceful degradation
+
             cv = Converter(str(self._pdf_path))
             cv.convert(str(self._output_path))
             cv.close()
@@ -104,6 +105,7 @@ class OCRWorker(QThread):
             engine = OCREngine(languages=self._languages, use_gpu=self._use_gpu)
             doc = fitz.open(str(self._pdf_path))
             try:
+
                 def _on_progress(cur: int, tot: int, msg: str) -> None:
                     self.progress.emit(cur, tot, msg)
 
@@ -168,6 +170,7 @@ class BatchWorker(QThread):
 
             def _rotate_op(doc: fitz.Document, output_path: Path) -> str:
                 from core.pdf_rotator import PDFRotator
+
                 result = PDFRotator().rotate_all(doc, angle, output_path)
                 return f"{result.pages_rotated} paginas rotacionadas {angle}°"
 
@@ -232,9 +235,13 @@ class SplitWorker(QThread):
             try:
                 splitter = PDFSplitter()
                 if self._mode == "range" and self._ranges:
-                    result = splitter.split_by_range(doc, self._ranges, self._output_dir, self._base_name)
+                    result = splitter.split_by_range(
+                        doc, self._ranges, self._output_dir, self._base_name
+                    )
                 elif self._mode == "size":
-                    result = splitter.split_by_size(doc, self._max_mb, self._output_dir, self._base_name)
+                    result = splitter.split_by_size(
+                        doc, self._max_mb, self._output_dir, self._base_name
+                    )
                 else:
                     result = splitter.split_by_bookmarks(doc, self._output_dir, self._base_name)
             finally:
@@ -311,7 +318,9 @@ class ReinsertWorker(QThread):
         try:
             doc = fitz.open(str(self._pdf_path))
             try:
-                ok = SignatureHandler().reinsert_signature(doc, self._region, self._image_path, self._output_path)
+                ok = SignatureHandler().reinsert_signature(
+                    doc, self._region, self._image_path, self._output_path
+                )
             finally:
                 doc.close()
             self.finished.emit(ok)
@@ -400,6 +409,7 @@ class SecurityWorker(QThread):
     def run(self) -> None:
         try:
             from core.pdf_security import PDFSecurity
+
             security = PDFSecurity()
             if self._mode == "encrypt":
                 kwargs = {
@@ -452,6 +462,7 @@ class ImageConvertWorker(QThread):
     def run(self) -> None:
         try:
             from core.pdf_image_converter import PDFImageConverter
+
             converter = PDFImageConverter()
             if self._mode == "pdf_to_images":
                 result = converter.pdf_to_images(
@@ -498,6 +509,7 @@ class WatermarkWorker(QThread):
     def run(self) -> None:
         try:
             from core.pdf_watermark import PDFWatermark
+
             wm = PDFWatermark()
             if self._mode == "text":
                 result = wm.apply_text(
@@ -544,6 +556,7 @@ class ReorderWorker(QThread):
     def run(self) -> None:
         try:
             from core.pdf_page_organizer import PDFPageOrganizer
+
             org = PDFPageOrganizer()
             if self._mode == "reorder":
                 result = org.reorder(

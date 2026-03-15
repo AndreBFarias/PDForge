@@ -5,6 +5,7 @@ logger = logging.getLogger("pdfforge.gpu")
 
 try:
     import torch
+
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
@@ -12,6 +13,7 @@ except ImportError:
 
 try:
     import GPUtil
+
     GPUTIL_AVAILABLE = True
 except ImportError:
     GPUTIL_AVAILABLE = False
@@ -67,9 +69,9 @@ def _stats_via_torch() -> GPUStats | None:
         return None
     try:
         props = torch.cuda.get_device_properties(0)
-        total = props.total_memory / (1024 ** 2)
-        reserved = torch.cuda.memory_reserved(0) / (1024 ** 2)
-        allocated = torch.cuda.memory_allocated(0) / (1024 ** 2)
+        total = props.total_memory / (1024**2)
+        reserved = torch.cuda.memory_reserved(0) / (1024**2)
+        allocated = torch.cuda.memory_allocated(0) / (1024**2)
         used = max(reserved, allocated)
         return GPUStats(
             available=True,
@@ -77,7 +79,7 @@ def _stats_via_torch() -> GPUStats | None:
             vram_total_mb=total,
             vram_used_mb=used,
             vram_free_mb=total - used,
-            utilization_pct=0.0,       # torch não expõe utilização do shader
+            utilization_pct=0.0,  # torch não expõe utilização do shader
             temperature_c=0.0,
         )
     except Exception as exc:

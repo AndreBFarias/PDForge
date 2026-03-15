@@ -7,6 +7,7 @@ import fitz
 try:
     import cv2
     import numpy as np
+
     CV2_AVAILABLE = True
 except ImportError:
     CV2_AVAILABLE = False
@@ -59,19 +60,22 @@ class SignatureHandler:
                 if CV2_AVAILABLE:
                     try:
                         n = pix.n
-                        img_array = np.frombuffer(pix.samples, dtype=np.uint8).reshape(height, width, n)
+                        img_array = np.frombuffer(pix.samples, dtype=np.uint8).reshape(
+                            height, width, n
+                        )
                         if n == 4:
                             img_array = cv2.cvtColor(img_array, cv2.COLOR_RGBA2GRAY)
                         elif n == 3:
                             img_array = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
 
                         _, thresh = cv2.threshold(img_array, 200, 255, cv2.THRESH_BINARY_INV)
-                        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                        contours, _ = cv2.findContours(
+                            thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+                        )
 
                         if contours:
                             non_rect_count = sum(
-                                1 for c in contours
-                                if len(c) > 4 and cv2.contourArea(c) > 50
+                                1 for c in contours if len(c) > 4 and cv2.contourArea(c) > 50
                             )
                             if non_rect_count > 0:
                                 confidence += 0.3

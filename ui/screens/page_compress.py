@@ -4,7 +4,6 @@ from pathlib import Path
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QComboBox,
-    QHBoxLayout,
     QLabel,
     QProgressBar,
     QPushButton,
@@ -102,7 +101,9 @@ class PageCompress(QWidget):
 
         try:
             import fitz
+
             from core.pdf_compressor import PDFCompressor
+
             doc = fitz.open(str(pdf))
             profile = _PROFILE_MAP[self._cmb_profile.currentText()]
             ct = PDFCompressor().analyze_content_type(doc)
@@ -150,8 +151,9 @@ class PageCompress(QWidget):
         if result.success:
             self._lbl_status.setStyleSheet(f"color: {DraculaTheme.GREEN};")
             self._lbl_status.setText(
-                f"Concluido: {result.original_size_mb:.2f} MB -> {result.compressed_size_mb:.2f} MB "
-                f"({result.reduction_pct:.1f}% de redução)"
+                f"Concluido: {result.original_size_mb:.2f} MB"
+                f" -> {result.compressed_size_mb:.2f} MB"
+                f" ({result.reduction_pct:.1f}% de redução)"
             )
             out = self._btn_out.current_path
             if out and out.exists():
