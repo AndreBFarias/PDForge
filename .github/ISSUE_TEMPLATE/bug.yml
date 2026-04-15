@@ -1,0 +1,68 @@
+name: Bug Report
+description: Reportar um bug no PDForge
+title: "[BUG] "
+labels: ["bug"]
+
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: Descrição do Bug
+      description: Descreva o bug de forma clara e objetiva.
+      placeholder: O que aconteceu?
+    validations:
+      required: true
+
+  - type: textarea
+    id: passos
+    attributes:
+      label: Passos para Reproduzir
+      description: Liste os passos para reproduzir o comportamento.
+      value: |
+        1. Abrir PDForge
+        2. Ir para '...'
+        3. Clicar em '...'
+        4. Observar o erro
+    validations:
+      required: true
+
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Comportamento Esperado
+      description: Descreva o que deveria acontecer.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severidade
+    attributes:
+      label: Severidade
+      options:
+        - P0 - Crash/perda de dados
+        - P1 - Funcionalidade principal quebrada
+        - P2 - Funcionalidade secundária com problema
+        - P3 - Cosmético/menor
+    validations:
+      required: true
+
+  - type: textarea
+    id: ambiente
+    attributes:
+      label: Ambiente
+      description: Informações sobre o sistema onde o bug ocorreu.
+      value: |
+        - SO: [ex: Pop!_OS 22.04, Ubuntu 24.04]
+        - Python: [ex: 3.12]
+        - PDForge: [ex: 1.1.1]
+        - GPU: [ex: NVIDIA RTX 3060 / sem GPU]
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Screenshots
+      description: Cole logs relevantes ou adicione screenshots.
+    validations:
+      required: false

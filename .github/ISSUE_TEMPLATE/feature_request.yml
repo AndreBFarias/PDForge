@@ -1,0 +1,47 @@
+name: Feature Request
+description: Sugerir uma nova funcionalidade para o PDForge
+title: "[FEAT] "
+labels: ["enhancement"]
+
+body:
+  - type: textarea
+    id: funcionalidade
+    attributes:
+      label: Funcionalidade Proposta
+      description: Descreva a funcionalidade que você gostaria de ver.
+      placeholder: O que o PDForge deveria fazer?
+    validations:
+      required: true
+
+  - type: textarea
+    id: problema
+    attributes:
+      label: Problema que Resolve
+      description: Qual problema ou limitação atual essa funcionalidade resolveria?
+      placeholder: Atualmente eu preciso fazer X manualmente porque...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solucao
+    attributes:
+      label: Solução Proposta
+      description: Se você tem uma ideia de como implementar, descreva aqui.
+    validations:
+      required: false
+
+  - type: textarea
+    id: casos_de_uso
+    attributes:
+      label: Casos de Uso
+      description: Exemplos concretos de como a funcionalidade seria usada.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Alternativas Consideradas
+      description: Outras abordagens ou ferramentas que você já tentou.
+    validations:
+      required: false
