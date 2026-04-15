@@ -6,6 +6,8 @@
 [![PyQt6](https://img.shields.io/badge/PyQt6-6.x-green.svg)](https://www.riverbankcomputing.com/software/pyqt/)
 [![Estrelas](https://img.shields.io/github/stars/AndreBFarias/PDForge.svg?style=social)](https://github.com/AndreBFarias/PDForge/stargazers)
 [![Contribuições](https://img.shields.io/badge/contribui%C3%A7%C3%B5es-bem--vindas-brightgreen.svg)](https://github.com/AndreBFarias/PDForge/issues)
+[![CI](https://github.com/AndreBFarias/PDForge/actions/workflows/ci.yml/badge.svg)](https://github.com/AndreBFarias/PDForge/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/AndreBFarias/PDForge?label=versão)](https://github.com/AndreBFarias/PDForge/releases/latest)
 
 <h1>PDForge</h1>
 
@@ -124,7 +126,7 @@ PDForge/
   config/              # Configurações e constantes
   core/                # Lógica de negócio (sem dependência de UI)
   ui/                  # Interface PyQt6 com tema Dracula
-    screens/           # 9 telas funcionais
+    screens/           # 13 telas funcionais
     widgets/           # Componentes customizados
   utils/               # Helpers (logging, GPU, fontes)
   tests/               # Testes (pytest)

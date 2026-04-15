@@ -39,4 +39,4 @@ jobs:
         run: mypy . --ignore-missing-imports
 
       - name: Testes
-        run: QT_QPA_PLATFORM=offscreen pytest tests/ -v --tb=short
+        run: QT_QPA_PLATFORM=offscreen pytest tests/ -v --tb=short --cov=. --cov-report=term-missing
