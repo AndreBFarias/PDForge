@@ -1,7 +1,7 @@
 # Sprint 01 — Infraestrutura Git + DevOps + CI/CD
 
 **Diretório:** `/home/andrefarias/Desenvolvimento/PDForge`
-**Conta git:** `AndreBFarias` / `andre.dsbf@gmail.com`
+**Conta git:** `[REDACTED]` / `[REDACTED]`
 
 Execute todas as tasks direto, sem criar task list, sem confirmar etapas, sem parar a não ser em erro real.
 
@@ -11,7 +11,7 @@ Execute todas as tasks direto, sem criar task list, sem confirmar etapas, sem pa
 
 - `.gitignore` já existe
 - `git init` já foi executado
-- `git config --local user.name "AndreBFarias"` e `user.email "andre.dsbf@gmail.com"` já estão setados
+- `git config --local user.name "[REDACTED]"` e `user.email "[REDACTED]"` já estão setados
 - Nenhum commit ainda
 
 ---
@@ -34,7 +34,7 @@ version = "1.0.0"
 description = "Editor de PDF com GUI e ML/AI para Linux"
 requires-python = ">=3.10"
 license = {text = "GPL-3.0"}
-authors = [{name = "AndreBFarias"}]
+authors = [{name = "[REDACTED]"}]
 
 [tool.ruff]
 line-length = 100

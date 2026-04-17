@@ -1,7 +1,7 @@
 # Sprint 03 — Core ML/CV (compressor, signature_handler, document_classifier)
 
 **Diretório:** `/home/andrefarias/Desenvolvimento/PDForge`
-**Conta git:** `AndreBFarias` / `andre.dsbf@gmail.com`
+**Conta git:** `[REDACTED]` / `[REDACTED]`
 **Pré-requisito:** Sprint 02 concluído e commitado.
 
 Execute todas as tasks direto, sem criar task list, sem confirmar etapas, sem parar a não ser em erro real.

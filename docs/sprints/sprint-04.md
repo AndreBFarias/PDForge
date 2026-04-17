@@ -1,7 +1,7 @@
 # Sprint 04 — Testes de Core
 
 **Diretório:** `/home/andrefarias/Desenvolvimento/PDForge`
-**Conta git:** `AndreBFarias` / `andre.dsbf@gmail.com`
+**Conta git:** `[REDACTED]` / `[REDACTED]`
 **Pré-requisito:** Sprint 03 concluído e commitado. Todos os módulos `core/` existem.
 
 Execute todas as tasks direto, sem criar task list, sem confirmar etapas, sem parar a não ser em erro real.

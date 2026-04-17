@@ -1,7 +1,7 @@
 # Sprint 02 — Settings + Core CRUD (merger, splitter, rotator)
 
 **Diretório:** `/home/andrefarias/Desenvolvimento/PDForge`
-**Conta git:** `AndreBFarias` / `andre.dsbf@gmail.com`
+**Conta git:** `[REDACTED]` / `[REDACTED]`
 **Pré-requisito:** Sprint 01 concluído e commitado.
 
 Execute todas as tasks direto, sem criar task list, sem confirmar etapas, sem parar a não ser em erro real.

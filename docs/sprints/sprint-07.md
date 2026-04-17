@@ -1,7 +1,7 @@
 # Sprint 07 — Main Window + Scripts de Instalação + Documentação
 
 **Diretório:** `/home/andrefarias/Desenvolvimento/PDForge`
-**Conta git:** `AndreBFarias` / `andre.dsbf@gmail.com`
+**Conta git:** `[REDACTED]` / `[REDACTED]`
 **Pré-requisito:** Sprint 06 concluído e commitado.
 
 Execute todas as tasks direto, sem criar task list, sem confirmar etapas, sem parar a não ser em erro real.
@@ -230,7 +230,7 @@ Criar `README.md`:
 ```markdown
 # PDForge
 
-[![CI](https://github.com/AndreBFarias/PDForge/actions/workflows/ci.yml/badge.svg)](https://github.com/AndreBFarias/PDForge/actions/workflows/ci.yml)
+[![CI](https://github.com/[REDACTED]/PDForge/actions/workflows/ci.yml/badge.svg)](https://github.com/[REDACTED]/PDForge/actions/workflows/ci.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 
@@ -257,7 +257,7 @@ Python 3.10+ e as bibliotecas do sistema são instaladas automaticamente pelo sc
 ### Instalação rápida
 
 ```bash
-git clone https://github.com/AndreBFarias/PDForge.git
+git clone https://github.com/[REDACTED]/PDForge.git
 cd PDForge
 bash install.sh
 ```

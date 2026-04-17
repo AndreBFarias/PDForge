@@ -1,7 +1,7 @@
 # Sprint 08 — Repositório GitHub + Push Final
 
 **Diretório:** `/home/andrefarias/Desenvolvimento/PDForge`
-**Conta git:** `AndreBFarias` / `andre.dsbf@gmail.com`
+**Conta git:** `[REDACTED]` / `[REDACTED]`
 **Pré-requisito:** Sprint 07 concluído e commitado. Todos os arquivos do projeto existem.
 
 Execute todas as tasks direto, sem criar task list, sem confirmar etapas, sem parar a não ser em erro real.
@@ -23,20 +23,20 @@ Confirme que:
 
 ---
 
-## Task 1 — Trocar conta gh para AndreBFarias
+## Task 1 — Trocar conta gh para [REDACTED]
 
 ```bash
-gh auth switch --hostname github.com --user AndreBFarias
+gh auth switch --hostname github.com --user [REDACTED]
 ```
 
-Verifique com `gh auth status` — deve mostrar `AndreBFarias`.
+Verifique com `gh auth status` — deve mostrar `[REDACTED]`.
 
 ---
 
 ## Task 2 — Criar repositório no GitHub
 
 ```bash
-gh repo create AndreBFarias/PDForge \
+gh repo create [REDACTED]/PDForge \
     --public \
     --description "Editor de PDF com GUI e ML para Linux" \
     --license gpl-3.0
@@ -49,11 +49,11 @@ Se o repo já existir (criado em sessão anterior), pule este passo.
 ## Task 3 — Adicionar remote e push
 
 ```bash
-git remote add origin git@github.com:AndreBFarias/PDForge.git
+git remote add origin git@github.com:[REDACTED]/PDForge.git
 git push -u origin main
 ```
 
-Se o remote já existir: `git remote set-url origin git@github.com:AndreBFarias/PDForge.git`
+Se o remote já existir: `git remote set-url origin git@github.com:[REDACTED]/PDForge.git`
 
 ---
 
@@ -70,7 +70,7 @@ git checkout main
 ## Task 5 — Verificação final
 
 ```bash
-gh repo view AndreBFarias/PDForge
+gh repo view [REDACTED]/PDForge
 gh run list --limit 3
 ```
 
